@@ -10,9 +10,15 @@ const errorElement = document.getElementById('login-error');
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Cek Tema Terakhir
     const savedTheme = localStorage.getItem('myLN_theme');
+    const themeIcon = document.getElementById('theme-icon');
+    
+    // Default: Mode Gelap (🌙)
     if (savedTheme === 'light') {
         document.body.classList.add('light-mode');
-        document.getElementById('theme-icon').innerText = '☀️';
+        themeIcon.innerText = '☀️';
+    } else {
+        // Secara eksplisit tetapkan bulan untuk mode gelap default
+        themeIcon.innerText = '🌙';
     }
 
     // 2. Cek Sesi Login Terakhir
@@ -36,7 +42,7 @@ function togglePasswordVisibility() {
     }
 }
 
-// ===== FITUR TEMA (GELAP/TERANG) =====
+// ===== FITUR TEMA (GELAP/TERANG) DENGAN ANIMASI =====
 function toggleTheme() {
     const body = document.body;
     const themeToggleBtn = document.querySelector('.theme-toggle');
