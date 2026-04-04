@@ -1,89 +1,132 @@
-:root {
-    --primary: #8a2be2;
-    --bg-dark: #050508;
-    --card-bg: #111119;
-    --text-main: #e0e0e0;
+const BLOG_URL = "https://mylnrill.blogspot.com/feeds/posts/default?alt=json";
+let LN_DATABASE = [];
+
+const loginForm = document.getElementById('login-form');
+const loginOverlay = document.getElementById('login-overlay');
+const mainApp = document.getElementById('main-app');
+const chapterList = document.getElementById('chapter-list');
+const loadingMsg = document.getElementById('loading-msg');
+const errorElement = document.getElementById('login-error');
+
+// CEK SESI LOGIN SAAT HALAMAN DIMUAT
+document.addEventListener('DOMContentLoaded', () => {
+    // Mengecek apakah sebelumnya sudah pernah login
+    const savedUser = localStorage.getItem('myLN_session');
+    
+    if (savedUser) {
+        // Jika sudah ada sesi, lewati animasi login dan langsung buka aplikasi
+        loginOverlay.classList.add('hidden');
+        mainApp.classList.remove('hidden');
+        document.getElementById('user-tag').innerText = `USER: ${savedUser.toUpperCase()}`;
+        fetchChapters();
+    }
+});
+
+// ===== LOGIKA LOGIN =====
+loginForm.addEventListener('submit', (e) => {
+    e.preventDefault(); // Mencegah reload web. Natively mendukung tombol "Enter".
+    
+    const user = document.getElementById('username').value.toLowerCase();
+    const pass = document.getElementById('password').value; // Sensitif huruf besar kecil
+
+    // Reset error message
+    errorElement.innerText = "";
+
+    // Validasi Spesifik
+    if (user === 'admin') {
+        if (pass === 'adminsukamommy') {
+            executeLogin(user);
+        } else {
+            errorElement.innerText = "Sandi salah untuk akun Admin!";
+        }
+    } else if (user === 'guest') {
+        if (pass === 'guest-guest') {
+            executeLogin(user);
+        } else {
+            errorElement.innerText = "Sandi salah untuk akun Guest!";
+        }
+    } else {
+        errorElement.innerText = "Username tidak ditemukan!";
+    }
+});
+
+function executeLogin(role) {
+    // Simpan sesi ke LocalStorage agar tidak hilang saat di-refresh
+    localStorage.setItem('myLN_session', role);
+    
+    // Animasi transisi
+    loginOverlay.style.transform = 'translateY(-100%)';
+    setTimeout(() => {
+        loginOverlay.classList.add('hidden');
+        mainApp.classList.remove('hidden');
+        document.getElementById('user-tag').innerText = `USER: ${role.toUpperCase()}`;
+        
+        fetchChapters(); 
+    }, 600);
 }
 
-body {
-    background-color: var(--bg-dark);
-    color: var(--text-main);
-    font-family: 'Roboto', sans-serif;
-    margin: 0;
-    overflow-x: hidden;
+function logout() {
+    // Hapus memori sesi saat logout
+    localStorage.removeItem('myLN_session');
+    location.reload(); // Refresh halaman untuk kembali ke menu login
 }
 
-.hidden { display: none !important; }
+// ===== AMBIL DATA BLOGGER =====
+async function fetchChapters() {
+    try {
+        const response = await fetch(BLOG_URL);
+        const data = await response.json();
+        
+        if (!data.feed.entry) {
+            loadingMsg.innerText = "Belum ada chapter yang diposting di Blogger.";
+            return;
+        }
 
-/* Login (Responsive Update) */
-.overlay {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: radial-gradient(circle, #1a1a2e 0%, #050508 100%);
-    display: flex; justify-content: center; align-items: center;
-    z-index: 2000; transition: transform 0.6s ease-in-out;
-    padding: 20px; box-sizing: border-box; /* Agar tidak mentok di layar kecil */
+        let posts = data.feed.entry.reverse(); 
+
+        LN_DATABASE = posts.map((entry, index) => {
+            return {
+                id: index + 1,
+                title: entry.title.$t,
+                content: entry.content.$t
+            };
+        });
+
+        loadingMsg.classList.add('hidden');
+        renderChapters();
+
+    } catch (error) {
+        console.error("Gagal memuat:", error);
+        loadingMsg.innerText = "Terjadi kesalahan saat memuat data. Pastikan Blogger dapat diakses.";
+    }
 }
 
-.login-card {
-    background: var(--card-bg); padding: 40px 30px; border-radius: 12px;
-    border: 1px solid var(--primary); text-align: center; 
-    width: 100%; max-width: 350px; /* Fleksibel di HP, maksimal 350px di PC */
-    box-shadow: 0 0 25px rgba(138, 43, 226, 0.3);
-    box-sizing: border-box;
+// ===== TAMPILAN CHAPTER =====
+function renderChapters() {
+    chapterList.innerHTML = '';
+    LN_DATABASE.forEach(ch => {
+        const card = document.createElement('div');
+        card.className = 'chapter-card';
+        card.innerHTML = `
+            <p style="color: var(--primary); font-size: 14px; margin:0 0 5px 0;">CHAPTER 0${ch.id}</p>
+            <h3 style="margin: 0;">${ch.title}</h3>
+        `;
+        card.onclick = () => openReader(ch.id);
+        chapterList.appendChild(card);
+    });
 }
 
-.login-card h2 { font-family: 'Orbitron', sans-serif; margin-bottom: 20px; font-size: 24px; }
-@media (max-width: 400px) { .login-card h2 { font-size: 20px; } } /* Pengecilan font di HP kecil */
-.login-card span, .logo span { color: var(--primary); }
+function openReader(id) {
+    const chapter = LN_DATABASE.find(c => c.id === id);
+    if (!chapter) return;
 
-input {
-    width: 100%; padding: 12px; margin: 10px 0;
-    background: #000; border: 1px solid #333; color: white;
-    box-sizing: border-box; border-radius: 4px; font-family: inherit;
+    document.getElementById('reader-title').innerText = chapter.title;
+    document.getElementById('reader-content').innerHTML = chapter.content; 
+    
+    document.getElementById('reader-view').classList.remove('hidden');
+    window.scrollTo(0, 0);
 }
 
-.guest-hint { font-size: 12px; color: #888; margin: 5px 0 15px 0; }
-.guest-hint span { color: var(--primary); font-weight: bold; }
-
-.btn-login, .btn-logout, .btn-finish {
-    background: var(--primary); color: white; border: none; 
-    cursor: pointer; font-weight: bold; padding: 10px 20px; border-radius: 4px;
+function closeReader() {
+    document.getElementById('reader-view').classList.add('hidden');
 }
-.btn-login { width: 100%; padding: 15px; transition: 0.3s; }
-.btn-login:hover { background: #711cc2; }
-.error-msg { color: #ff3366; margin-top: 15px; font-size: 14px; min-height: 20px; }
-
-/* Header & Nav */
-nav { display: flex; justify-content: space-between; align-items: center; padding: 15px 5%; border-bottom: 1px solid #222; }
-.logo { font-family: 'Orbitron', sans-serif; font-size: 22px; font-weight: bold; }
-@media (max-width: 500px) { .user-info { display: flex; flex-direction: column; align-items: flex-end; gap: 5px;} }
-.hero-banner { padding: 40px 5%; background: linear-gradient(to bottom, #151520, transparent); }
-.hero-banner h1 { font-family: 'Orbitron', sans-serif; font-size: clamp(2rem, 5vw, 3rem); margin: 10px 0; }
-.badge { background: var(--primary); padding: 5px 10px; border-radius: 5px; font-size: 12px; }
-.status-blink { color: #00f2ff; animation: blink 1.5s infinite; }
-@keyframes blink { 50% { opacity: 0.4; } }
-
-/* Chapter List */
-.container { padding: 40px 5%; min-height: 50vh; }
-.loading-text { color: var(--primary); font-style: italic; }
-.chapter-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
-.chapter-card { 
-    background: var(--card-bg); padding: 20px; border-radius: 8px; 
-    border-left: 4px solid #333; cursor: pointer; transition: 0.3s;
-}
-.chapter-card:hover { border-left-color: var(--primary); transform: translateY(-3px); }
-
-/* Reader */
-#reader-view {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: var(--bg-dark); overflow-y: auto; z-index: 1500;
-}
-.reader-nav { padding: 15px 5%; border-bottom: 1px solid #222; display: flex; align-items: center; background: #0a0a10; position: sticky; top: 0; }
-.btn-back { background: transparent; color: #aaa; border: 1px solid #aaa; padding: 6px 12px; cursor: pointer; border-radius: 4px; margin-right: 15px; }
-
-/* Konten dari Blogger */
-.ln-body { max-width: 800px; margin: 30px auto; padding: 0 5%; font-size: 1.1rem; line-height: 1.8; }
-.ln-body p { margin-bottom: 20px; text-indent: 30px; text-align: justify; }
-.ln-body img { max-width: 100%; height: auto; border-radius: 8px; display: block; margin: 20px auto; }
-.reader-end { text-align: center; padding: 30px; margin-bottom: 40px; }
-footer { text-align: center; padding: 20px; font-size: 14px; color: #666; border-top: 1px solid #222; }
