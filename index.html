@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>myLN | CODE:ZERO</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div id="login-overlay" class="overlay">
+        <div class="login-card">
+            <h2>my<span>LN</span> LOGIN</h2>
+            <p>Masukkan akses untuk membaca.</p>
+            <form id="login-form">
+                <input type="text" id="username" placeholder="Username" required autocomplete="off">
+                <input type="password" id="password" placeholder="Password" required>
+                <button type="submit" class="btn-login">MASUK</button>
+            </form>
+            <p id="login-error" class="error-msg"></p>
+        </div>
+    </div>
+
+    <div id="main-app" class="hidden">
+        <nav>
+            <div class="logo">my<span>LN</span></div>
+            <div class="user-info">
+                <span id="user-tag"></span>
+                <button onclick="logout()" class="btn-logout">KELUAR</button>
+            </div>
+        </nav>
+
+        <header>
+            <div class="hero-banner">
+                <span class="badge">SERI ORIGINAL</span>
+                <h1>CODE:ZERO</h1>
+                <h3>The Aetherian Architect</h3>
+                <p>Status: <span class="status-blink">ONGOING</span> | Author: <strong>Najikh</strong></p>
+            </div>
+        </header>
+
+        <section class="container">
+            <h2 class="section-title">DAFTAR CHAPTER</h2>
+            <p id="loading-msg" class="loading-text">Mengambil data dari server...</p>
+            
+            <div id="chapter-list" class="chapter-grid">
+                </div>
+        </section>
+
+        <div id="reader-view" class="hidden">
+            <div class="reader-nav">
+                <button onclick="closeReader()" class="btn-back">← KEMBALI</button>
+                <h2 id="reader-title">Judul Chapter</h2>
+            </div>
+            
+            <div id="reader-content" class="ln-body"></div>
+            
+            <div class="reader-end">
+                <button onclick="closeReader()" class="btn-finish">SELESAI MEMBACA</button>
+            </div>
+        </div>
+
+        <footer>
+            <p>&copy; 2026 <strong>myLN</strong> Project. Host via GitHub Pages (@Najikhna).</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
