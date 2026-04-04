@@ -28,11 +28,12 @@ body {
 
 .hidden { display: none !important; }
 
-/* === TEMA TOGGLE BUTTON === */
+/* === PERBAIKAN TEMA TOGGLE BUTTON === */
 .theme-toggle {
     position: absolute; top: 20px; right: 30px;
     font-size: 28px; cursor: pointer; user-select: none;
     transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    z-index: 2001; /* Pastikan di atas segalanya */
 }
 /* Animasi putar saat diklik */
 .theme-toggle.spin { transform: rotate(360deg) scale(1.2); }
@@ -44,6 +45,9 @@ body {
     display: flex; justify-content: center; align-items: center;
     z-index: 2000; padding: 20px; box-sizing: border-box;
     transition: transform 0.6s ease-in-out, background 0.5s ease;
+    
+    /* Tambahan agar penempatan tema bisa menggunakan posisi absolut */
+    position: relative; 
 }
 
 body.light-mode .overlay {
@@ -61,7 +65,7 @@ body.light-mode .overlay {
 .login-card h2 { font-family: 'Orbitron', sans-serif; margin-bottom: 20px; font-size: 24px; }
 .login-card span, .logo span { color: var(--primary); }
 
-/* === INPUT & PASSWORD MATA === */
+/* === PERBAIKAN INPUT & PASSWORD MATA === */
 input {
     width: 100%; padding: 12px; margin: 10px 0;
     background: var(--input-bg); border: 1px solid var(--border-color); 
@@ -70,11 +74,14 @@ input {
 }
 input:focus { outline: none; border-color: var(--primary); }
 
+/* Bidang pembungkus untuk menempatkan ikon mata secara absolut */
 .password-wrapper { position: relative; width: 100%; }
-.password-wrapper input { padding-right: 40px; } /* Ruang buat ikon mata */
+.password-wrapper input { padding-right: 40px; } /* Ruang buat ikon mata di dalam input */
+
 #toggle-password {
     position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
     cursor: pointer; font-size: 18px; user-select: none; opacity: 0.7;
+    z-index: 1001; /* Di atas input field */
 }
 #toggle-password:hover { opacity: 1; }
 
