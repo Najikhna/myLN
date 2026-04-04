@@ -1,58 +1,89 @@
-// Konfigurasi API Blogger
 const BLOG_URL = "https://mylnrill.blogspot.com/feeds/posts/default?alt=json";
 let LN_DATABASE = [];
 
-// Ambil Elemen
 const loginForm = document.getElementById('login-form');
 const loginOverlay = document.getElementById('login-overlay');
 const mainApp = document.getElementById('main-app');
 const errorElement = document.getElementById('login-error');
 
-// 1. CEK SESI SAAT REFRESH
+// ===== INISIALISASI SAAT HALAMAN DIMUAT =====
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("Sistem myLN Siap...");
+    // 1. Cek Tema Terakhir
+    const savedTheme = localStorage.getItem('myLN_theme');
+    if (savedTheme === 'light') {
+        document.body.classList.add('light-mode');
+        document.getElementById('theme-icon').innerText = '☀️';
+    }
+
+    // 2. Cek Sesi Login Terakhir
     const savedUser = localStorage.getItem('myLN_session');
     if (savedUser) {
-        console.log("Sesi ditemukan: " + savedUser);
         startApp(savedUser);
     }
 });
 
-// 2. LOGIKA LOGIN
+// ===== FITUR TOGGLE PASSWORD (MATA) =====
+function togglePasswordVisibility() {
+    const passInput = document.getElementById('password');
+    const toggleIcon = document.getElementById('toggle-password');
+    
+    if (passInput.type === 'password') {
+        passInput.type = 'text';
+        toggleIcon.innerText = '🙈'; // Berubah jadi monyet tutup mata (atau bisa disesuaikan)
+    } else {
+        passInput.type = 'password';
+        toggleIcon.innerText = '👁️'; // Kembali jadi mata
+    }
+}
+
+// ===== FITUR TEMA (GELAP/TERANG) =====
+function toggleTheme() {
+    const body = document.body;
+    const themeToggleBtn = document.querySelector('.theme-toggle');
+    const themeIcon = document.getElementById('theme-icon');
+
+    // Memicu animasi CSS spin
+    themeToggleBtn.classList.remove('spin');
+    void themeToggleBtn.offsetWidth; // Trigger reflow biar animasi bisa diulang
+    themeToggleBtn.classList.add('spin');
+
+    // Ubah tema
+    body.classList.toggle('light-mode');
+    
+    // Ganti ikon & simpan preferensi ke local storage
+    if (body.classList.contains('light-mode')) {
+        themeIcon.innerText = '☀️';
+        localStorage.setItem('myLN_theme', 'light');
+    } else {
+        themeIcon.innerText = '🌙';
+        localStorage.setItem('myLN_theme', 'dark');
+    }
+}
+
+// ===== LOGIKA LOGIN =====
 loginForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    
     const inputUser = document.getElementById('username').value.trim().toLowerCase();
     const inputPass = document.getElementById('password').value.trim();
-
-    console.log("Mencoba login: " + inputUser);
-
-    // RESET ERROR
     errorElement.innerText = "";
 
-    // VALIDASI ADMIN
     if (inputUser === 'admin') {
         if (inputPass === 'adminsukamommy') {
             startApp(inputUser);
         } else {
             errorElement.innerText = "Sandi Admin Salah!";
         }
-    } 
-    // VALIDASI GUEST
-    else if (inputUser === 'guest') {
+    } else if (inputUser === 'guest') {
         if (inputPass === 'guest-guest') {
             startApp(inputUser);
         } else {
             errorElement.innerText = "Sandi Guest Salah!";
         }
-    } 
-    // USER TIDAK ADA
-    else {
+    } else {
         errorElement.innerText = "Username tidak terdaftar!";
     }
 });
 
-// 3. JALANKAN APLIKASI
 function startApp(role) {
     localStorage.setItem('myLN_session', role);
     loginOverlay.style.transform = 'translateY(-100%)';
@@ -65,12 +96,16 @@ function startApp(role) {
     }, 600);
 }
 
-// 4. AMBIL DATA DARI BLOGGER
+function logout() {
+    localStorage.removeItem('myLN_session');
+    location.reload();
+}
+
+// ===== AMBIL DATA DARI BLOGGER =====
 async function fetchChapters() {
-    console.log("Mengambil data dari Blogger...");
     try {
         const response = await fetch(BLOG_URL);
-        if (!response.ok) throw new Error("Blog tidak ditemukan atau private");
+        if (!response.ok) throw new Error("Blog API Gagal Diakses");
         
         const data = await response.json();
         const posts = data.feed.entry;
@@ -88,7 +123,6 @@ async function fetchChapters() {
 
         document.getElementById('loading-msg').classList.add('hidden');
         renderChapters();
-        console.log("Data berhasil dimuat!");
 
     } catch (err) {
         console.error(err);
@@ -96,7 +130,7 @@ async function fetchChapters() {
     }
 }
 
-// 5. RENDER CHAPTER
+// ===== TAMPILAN CHAPTER =====
 function renderChapters() {
     const list = document.getElementById('chapter-list');
     list.innerHTML = '';
@@ -104,7 +138,7 @@ function renderChapters() {
         const card = document.createElement('div');
         card.className = 'chapter-card';
         card.innerHTML = `
-            <p style="color: #8a2be2; font-size: 12px; margin:0 0 5px 0;">CHAPTER 0${ch.id}</p>
+            <p style="color: var(--primary); font-size: 12px; margin:0 0 5px 0;">CHAPTER 0${ch.id}</p>
             <h3 style="margin: 0; font-size: 16px;">${ch.title}</h3>
         `;
         card.onclick = () => openReader(ch.id);
@@ -112,7 +146,6 @@ function renderChapters() {
     });
 }
 
-// 6. READER UTILS
 function openReader(id) {
     const chapter = LN_DATABASE.find(c => c.id === id);
     document.getElementById('reader-title').innerText = chapter.title;
@@ -123,9 +156,4 @@ function openReader(id) {
 
 function closeReader() {
     document.getElementById('reader-view').classList.add('hidden');
-}
-
-function logout() {
-    localStorage.removeItem('myLN_session');
-    location.reload();
 }
