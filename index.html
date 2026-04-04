@@ -4,181 +4,109 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>myLN | CODE:ZERO</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#8a2be2">
-
-    <style>
-        /* === DESAIN ASLI MY KOMIK ASELI (MODIFIKASI LN) === */
-        :root {
-            --glass-bg: rgba(20, 20, 25, 0.9);
-            --glass-border: 1px solid rgba(138, 43, 226, 0.3);
-            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
-            --text-main: #ffffff; 
-            --accent: #8a2be2; 
-            --accent-hover: #a04cf0;
-        }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
-        
-        body { 
-            font-family: 'Inter', sans-serif; color: var(--text-main); min-height: 100vh;
-            background: #050508 url('https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?q=80&w=2670&auto=format&fit=crop') no-repeat center center fixed; 
-            background-size: cover; 
-        }
-
-        /* HEADER */
-        header { 
-            position: sticky; top: 0; z-index: 100; 
-            background: rgba(10, 10, 15, 0.95); backdrop-filter: blur(12px); 
-            border-bottom: var(--glass-border); padding: 15px; 
-            display: flex; align-items: center; justify-content: space-between;
-        }
-        .logo { font-size: 1.3rem; font-weight: 800; letter-spacing: 1px; }
-        .logo span { color: var(--accent); }
-        .header-btn { display: flex; gap: 10px; }
-        .btn-icon { background: none; border: none; color: var(--text-main); cursor: pointer; padding: 8px; border-radius: 50%; }
-        .btn-icon:hover { background: rgba(255,255,255,0.1); }
-
-        /* GRID CHAPTER */
-        .main-content { padding: 20px 15px 100px 15px; max-width: 1200px; margin: 0 auto; }
-        .grid-layout { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; }
-        
-        .card { 
-            background: var(--glass-bg); border: var(--glass-border); border-radius: 8px; 
-            overflow: hidden; cursor: pointer; position: relative; transition: 0.2s; box-shadow: var(--glass-shadow);
-        }
-        .card:hover { transform: translateY(-5px); border-color: var(--accent); }
-        .card-img { width: 100%; aspect-ratio: 3/4; object-fit: cover; }
-        .card-info { padding: 10px; background: linear-gradient(to top, rgba(0,0,0,1), rgba(0,0,0,0.4)); position: absolute; bottom: 0; width: 100%; }
-        .card-title { font-size: 0.9rem; font-weight: bold; text-shadow: 1px 1px 2px black; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .ch-badge { position: absolute; top: 8px; left: 8px; background: var(--accent); color: white; font-size: 0.7rem; font-weight: bold; padding: 4px 8px; border-radius: 4px; }
-
-        /* MODAL (LOGIN & TAMBAH CHAPTER) */
-        .modal-overlay { 
-            position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px);
-            display: flex; justify-content: center; align-items: center; z-index: 1000; 
-        }
-        .modal-card { 
-            background: var(--glass-bg); border: var(--glass-border); width: 90%; max-width: 400px; 
-            padding: 30px; border-radius: 12px; position: relative; box-shadow: var(--glass-shadow);
-        }
-        .modal-card h2 { margin-bottom: 20px; text-align: center; }
-        .modal-card input, .modal-card textarea { 
-            width: 100%; padding: 12px; margin-bottom: 15px; background: rgba(0,0,0,0.5); 
-            border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 6px; font-family: 'Inter', sans-serif;
-        }
-        .modal-card textarea { min-height: 150px; resize: vertical; }
-        .btn-primary { width: 100%; padding: 12px; background: var(--accent); color: white; font-weight: bold; border: none; border-radius: 6px; cursor: pointer; }
-        .btn-primary:hover { background: var(--accent-hover); }
-        .btn-close { position: absolute; top: 15px; right: 15px; background: none; border: none; color: white; cursor: pointer; }
-        .error-text { color: #ff5252; font-size: 0.85rem; text-align: center; margin-top: 10px; }
-
-        /* READER (HALAMAN BACA) */
-        #readerModal { 
-            position: fixed; inset: 0; background: #050508; z-index: 2000; overflow-y: auto; display: none; 
-        }
-        .reader-nav { 
-            position: sticky; top: 0; background: rgba(10,10,15,0.95); padding: 15px; 
-            border-bottom: 1px solid var(--garis); display: flex; align-items: center; justify-content: space-between;
-        }
-        .reader-nav button { background: none; color: white; border: none; cursor: pointer; display: flex; align-items: center; font-weight: bold; }
-        
-        .reader-content { max-width: 800px; margin: 30px auto; padding: 0 20px; font-size: 1.15rem; line-height: 1.8; color: #ddd; text-align: justify; white-space: pre-wrap; }
-        .reader-title { text-align: center; font-size: 1.5rem; color: var(--accent); margin-bottom: 30px; font-weight: 800; }
-
-        /* FAB ADMIN */
-        .fab { 
-            position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; 
-            background: var(--accent); color: white; border-radius: 50%; display: flex; 
-            justify-content: center; align-items: center; font-size: 30px; box-shadow: 0 4px 15px rgba(138,43,226,0.6); 
-            cursor: pointer; z-index: 90; display: none; transition: 0.3s;
-        }
-        .fab:hover { transform: scale(1.1); }
-        .admin-controls { display: none; justify-content: space-between; margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; }
-        .btn-danger { background: #ff5252; color: white; padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; }
-
-        .hidden { display: none !important; }
-    </style>
 </head>
 <body>
 
-    <header>
+    <header class="glass-panel">
         <div class="logo">my<span>LN</span></div>
-        <div class="header-btn">
-            <span id="userStatus" style="font-size: 0.8rem; align-self: center; margin-right: 10px;"></span>
-            <button class="btn-icon" onclick="bukaLogin()" id="btnLogin"><span class="material-icons">login</span></button>
-            <button class="btn-icon hidden" onclick="logout()" id="btnLogout"><span class="material-icons">logout</span></button>
+        
+        <div class="header-actions">
+            <button class="btn-icon" onclick="gantiTema()" id="btnTheme" title="Ubah Tema">
+                <span class="material-icons" id="iconTheme">dark_mode</span>
+            </button>
+            <button class="btn-icon" onclick="bukaLogin()" id="btnLogin" title="Login">
+                <span class="material-icons">login</span>
+            </button>
+            <button class="btn-icon hidden" onclick="keluarAkun()" id="btnLogout" title="Logout" style="color: #ff3366;">
+                <span class="material-icons">logout</span>
+            </button>
         </div>
     </header>
 
+    <div class="hero-banner">
+        <span class="badge">SERI ORIGINAL</span>
+        <h1>CODE:ZERO</h1>
+        <p>The Aetherian Architect</p>
+    </div>
+
     <div class="main-content">
-        <div class="grid-layout" id="chapterList"></div>
+        <div class="chapter-grid" id="gridChapter"></div>
     </div>
 
-    <div class="fab" id="fabAdd" onclick="bukaFormTambah()">+</div>
-
-    <div class="modal-overlay hidden" id="loginModal">
-        <div class="modal-card">
-            <button class="btn-close" onclick="tutupLogin()"><span class="material-icons">close</span></button>
-            <h2>SYSTEM LOGIN</h2>
-            <input type="text" id="username" placeholder="Username" autocomplete="off">
-            <input type="password" id="password" placeholder="Password">
-            <p style="font-size: 11px; color: #aaa; margin-bottom: 15px; text-align: center;">Tamu -> guest / guest-guest</p>
-            <button class="btn-primary" onclick="prosesLogin()">MASUK</button>
-            <p class="error-text" id="loginError"></p>
-        </div>
+    <div class="fab hidden" id="fabTambah" onclick="bukaFormTambah()">
+        <span class="material-icons">add</span>
     </div>
 
-    <div class="modal-overlay hidden" id="formModal">
-        <div class="modal-card" style="max-width: 600px;">
-            <button class="btn-close" onclick="tutupForm()"><span class="material-icons">close</span></button>
-            <h2 id="formTitle">Tambah Chapter</h2>
-            <input type="hidden" id="editId">
-            <input type="text" id="inputJudul" placeholder="Judul Chapter (Cth: Log: Restart_Sequence)">
-            <input type="text" id="inputCover" placeholder="Link Gambar Cover (Opsional)">
-            <textarea id="inputIsi" placeholder="Tulis cerita di sini..."></textarea>
-            <button class="btn-primary" onclick="simpanChapter()">SIMPAN CERITA</button>
-        </div>
-    </div>
-
-    <div id="readerModal">
-        <div class="reader-nav">
-            <button onclick="tutupReader()"><span class="material-icons">arrow_back</span> Kembali</button>
-            <span style="font-weight: 800; color: var(--accent);">CODE:ZERO</span>
-            <div style="width: 24px;"></div> </div>
-        <div class="reader-content">
-            <div class="reader-title" id="readTitle"></div>
-            <div id="readBody"></div>
+    <div class="modal-overlay hidden" id="modalLogin">
+        <div class="modal-content glass-panel">
+            <h2>my<span>LN</span> LOGIN</h2>
+            <p style="text-align: center; font-size: 12px; color: #aaa; margin-bottom: 20px;">Akses Khusus Sistem</p>
             
-            <div class="admin-controls" id="adminControls">
-                <button class="btn-primary" id="btnEdit" style="width: 48%;">EDIT</button>
-                <button class="btn-danger" id="btnHapus">HAPUS</button>
+            <div class="form-group">
+                <input type="text" id="inputUsername" placeholder="Username" autocomplete="off">
+            </div>
+            
+            <div class="form-group password-box">
+                <input type="password" id="inputPassword" placeholder="Password">
+                <button type="button" onclick="togglePassword()" class="btn-eye">
+                    <span class="material-icons" id="eyeIcon">visibility</span>
+                </button>
+            </div>
+            
+            <p style="font-size: 11px; color: var(--primary); text-align: center; margin-bottom: 15px;">Admin: admin | Tamu: guest</p>
+            
+            <button class="btn-submit" onclick="prosesLogin()">INITIALIZE</button>
+            <button class="btn-cancel" onclick="tutupLogin()">BATAL</button>
+            <p id="pesanError" style="color: #ff3366; text-align: center; font-size: 12px; margin-top: 15px; min-height: 15px;"></p>
+        </div>
+    </div>
+
+    <div class="modal-overlay hidden" id="modalForm">
+        <div class="modal-content glass-panel" style="max-width: 600px;">
+            <h2 id="judulForm" style="font-family: 'Orbitron'; margin-bottom: 15px;">Tambah Chapter</h2>
+            <input type="hidden" id="editId">
+            <div class="form-group">
+                <input type="text" id="judulChapter" placeholder="Judul Chapter (Wajib)">
+            </div>
+            <div class="form-group">
+                <input type="text" id="coverChapter" placeholder="Link Cover Gambar (Opsional)">
+            </div>
+            <div class="form-group">
+                <textarea id="isiChapter" placeholder="Ketik cerita LN di sini..." style="height: 250px; resize: vertical;"></textarea>
+            </div>
+            <button class="btn-submit" onclick="simpanChapter()">SIMPAN CERITA</button>
+            <button class="btn-cancel" onclick="tutupForm()">BATAL</button>
+        </div>
+    </div>
+
+    <div class="reader-overlay hidden" id="modalBaca">
+        <div class="reader-header glass-panel">
+            <button class="btn-back" onclick="tutupBaca()"><span class="material-icons">arrow_back</span> KEMBALI</button>
+            <h3 id="bacaJudul">Judul</h3>
+        </div>
+        <div class="reader-body">
+            <div id="bacaIsi" class="teks-cerita"></div>
+            
+            <div class="admin-actions hidden" id="aksiAdmin">
+                <button class="btn-submit" onclick="editDariBaca()" style="width: 48%;">EDIT CHAPTER</button>
+                <button class="btn-cancel" onclick="hapusDariBaca()" style="width: 48%; color: #ff3366; border-color: #ff3366;">HAPUS</button>
+            </div>
+            
+            <div style="text-align: center; padding: 40px;">
+                <button class="btn-submit" onclick="tutupBaca()" style="max-width: 200px;">SELESAI MEMBACA</button>
             </div>
         </div>
     </div>
 
-    <script>
-        // DATA BAWAAN JIKA KOSONG (Cerita Arata Kasuga)
-        const ceritaDefault = [
-            { id: 1, judul: "Log: Restart_Sequence", cover: "https://via.placeholder.com/300x400/111/fff?text=CH+1", isi: "Hujan deras mengguyur Shinjuku...\n\nArata Kasuga terbangun dalam raga Origin-0..." },
-            { id: 2, judul: "Pembenaran Logika yang Rusak", cover: "https://via.placeholder.com/300x400/111/fff?text=CH+2", isi: "Suara geraman Chimera itu menggetarkan pilar.\n\nIa memodifikasi gravitasi dan gaya gesek lantai." }
-        ];
+    <div id="toastBox">Pesan</div>
 
-        // MENGAMBIL DATA DARI PENYIMPANAN HP/PC (LocalStorage)
-        let lnData = JSON.parse(localStorage.getItem('myLN_data')) || ceritaDefault;
-        let userSaatIni = localStorage.getItem('myLN_session') || '';
-
-        // JALANKAN SAAT WEB DIBUKA
-        document.addEventListener('DOMContentLoaded', () => {
-            cekAkses();
-            tampilkanDaftar();
-        });
-
-        // ================= FITUR TAMPILAN =================
-        function tampilkanDaftar() {
-            const list = document.getElementById('chapterList');
+    <script src="script.js"></script>
+</body>
+</html>
+        const list = document.getElementById('chapterList');
             list.innerHTML = '';
             
             lnData.forEach((ch, index) => {
