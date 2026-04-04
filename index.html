@@ -6,225 +6,329 @@
     <title>myLN | CODE:ZERO</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <meta name="theme-color" content="#00f2fe">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#8a2be2">
 
     <style>
-        /* CSS ASLI MY KOMIK ASELI (Diadaptasi sedikit untuk Light Novel) */
+        /* === DESAIN ASLI MY KOMIK ASELI (MODIFIKASI LN) === */
         :root {
-            --glass-bg: rgba(30, 30, 30, 0.85);
-            --glass-border: 1px solid rgba(255, 255, 255, 0.12);
+            --glass-bg: rgba(20, 20, 25, 0.9);
+            --glass-border: 1px solid rgba(138, 43, 226, 0.3);
             --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
             --text-main: #ffffff; 
-            --accent: #00f2fe; /* Warna cyan/neon asli kamu */
+            --accent: #8a2be2; 
+            --accent-hover: #a04cf0;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; -webkit-tap-highlight-color: transparent; }
+        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
         
         body { 
             font-family: 'Inter', sans-serif; color: var(--text-main); min-height: 100vh;
-            /* Background original dari web komikmu */
-            background: url('https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?q=80&w=2670&auto=format&fit=crop') no-repeat center center fixed; 
-            background-size: cover; transition: background 0.5s;
+            background: #050508 url('https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?q=80&w=2670&auto=format&fit=crop') no-repeat center center fixed; 
+            background-size: cover; 
         }
 
-        /* --- TEMA TERANG --- */
-        body.light-mode {
-            --glass-bg: rgba(255, 255, 255, 0.95);
-            --glass-border: 1px solid rgba(0, 0, 0, 0.12);
-            --text-main: #111111;
-        }
-
-        /* --- HEADER & NAV --- */
+        /* HEADER */
         header { 
             position: sticky; top: 0; z-index: 100; 
-            background: rgba(20, 20, 20, 0.9); backdrop-filter: blur(12px); 
-            border-bottom: var(--glass-border); padding: 10px 15px; 
-            display: flex; align-items: center; gap: 10px; transition: 0.3s; 
+            background: rgba(10, 10, 15, 0.95); backdrop-filter: blur(12px); 
+            border-bottom: var(--glass-border); padding: 15px; 
+            display: flex; align-items: center; justify-content: space-between;
         }
-        body.light-mode header { background: rgba(255, 255, 255, 0.9); }
-        
-        .logo { font-size: 1.2rem; font-weight: 800; letter-spacing: 1px; margin-right: 5px;}
+        .logo { font-size: 1.3rem; font-weight: 800; letter-spacing: 1px; }
         .logo span { color: var(--accent); }
-        
-        /* KOLOM PENCARIAN BAWAAN KOMIK */
-        .search-wrapper { flex-grow: 1; position: relative; }
-        .search-wrapper input { 
-            width: 100%; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); 
-            color: var(--text-main); padding: 8px 35px 8px 15px; border-radius: 20px; font-size: 0.9rem; 
-        }
-        body.light-mode .search-wrapper input { background: rgba(0,0,0,0.05); border-color: rgba(0,0,0,0.2); }
-        .search-wrapper .material-icons { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.5); pointer-events: none; }
-        
-        .btn-icon { background: none; border: none; color: var(--text-main); cursor: pointer; display: flex; align-items: center; padding: 8px; border-radius: 50%; transition: 0.3s; }
+        .header-btn { display: flex; gap: 10px; }
+        .btn-icon { background: none; border: none; color: var(--text-main); cursor: pointer; padding: 8px; border-radius: 50%; }
         .btn-icon:hover { background: rgba(255,255,255,0.1); }
 
-        /* --- DAFTAR GRID CHAPTER --- */
-        .main-content { padding: 15px; padding-bottom: 80px; }
-        #loadingMsg { text-align: center; margin-top: 50px; font-weight: bold; color: var(--accent); font-size: 1.1rem; }
+        /* GRID CHAPTER */
+        .main-content { padding: 20px 15px 100px 15px; max-width: 1200px; margin: 0 auto; }
+        .grid-layout { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; }
         
-        .comic-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-        @media (min-width: 600px) { .comic-grid { grid-template-columns: repeat(4, 1fr); gap: 15px; } }
+        .card { 
+            background: var(--glass-bg); border: var(--glass-border); border-radius: 8px; 
+            overflow: hidden; cursor: pointer; position: relative; transition: 0.2s; box-shadow: var(--glass-shadow);
+        }
+        .card:hover { transform: translateY(-5px); border-color: var(--accent); }
+        .card-img { width: 100%; aspect-ratio: 3/4; object-fit: cover; }
+        .card-info { padding: 10px; background: linear-gradient(to top, rgba(0,0,0,1), rgba(0,0,0,0.4)); position: absolute; bottom: 0; width: 100%; }
+        .card-title { font-size: 0.9rem; font-weight: bold; text-shadow: 1px 1px 2px black; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .ch-badge { position: absolute; top: 8px; left: 8px; background: var(--accent); color: white; font-size: 0.7rem; font-weight: bold; padding: 4px 8px; border-radius: 4px; }
 
-        .comic-card { position: relative; border-radius: 8px; overflow: hidden; background: var(--glass-bg); border: var(--glass-border); box-shadow: var(--glass-shadow); display: flex; flex-direction: column; transition: transform 0.2s; cursor: pointer; }
-        .comic-card:active { transform: scale(0.96); }
+        /* MODAL (LOGIN & TAMBAH CHAPTER) */
+        .modal-overlay { 
+            position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px);
+            display: flex; justify-content: center; align-items: center; z-index: 1000; 
+        }
+        .modal-card { 
+            background: var(--glass-bg); border: var(--glass-border); width: 90%; max-width: 400px; 
+            padding: 30px; border-radius: 12px; position: relative; box-shadow: var(--glass-shadow);
+        }
+        .modal-card h2 { margin-bottom: 20px; text-align: center; }
+        .modal-card input, .modal-card textarea { 
+            width: 100%; padding: 12px; margin-bottom: 15px; background: rgba(0,0,0,0.5); 
+            border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 6px; font-family: 'Inter', sans-serif;
+        }
+        .modal-card textarea { min-height: 150px; resize: vertical; }
+        .btn-primary { width: 100%; padding: 12px; background: var(--accent); color: white; font-weight: bold; border: none; border-radius: 6px; cursor: pointer; }
+        .btn-primary:hover { background: var(--accent-hover); }
+        .btn-close { position: absolute; top: 15px; right: 15px; background: none; border: none; color: white; cursor: pointer; }
+        .error-text { color: #ff5252; font-size: 0.85rem; text-align: center; margin-top: 10px; }
 
-        .card-img-wrapper { width: 100%; aspect-ratio: 2/3; overflow: hidden; position: relative; }
-        .card-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
-        .card-overlay { position: absolute; bottom: 0; left: 0; width: 100%; background: linear-gradient(to top, rgba(0,0,0,0.95) 10%, rgba(0,0,0,0.5) 80%, transparent 100%); padding: 30px 10px 10px 10px; }
+        /* READER (HALAMAN BACA) */
+        #readerModal { 
+            position: fixed; inset: 0; background: #050508; z-index: 2000; overflow-y: auto; display: none; 
+        }
+        .reader-nav { 
+            position: sticky; top: 0; background: rgba(10,10,15,0.95); padding: 15px; 
+            border-bottom: 1px solid var(--garis); display: flex; align-items: center; justify-content: space-between;
+        }
+        .reader-nav button { background: none; color: white; border: none; cursor: pointer; display: flex; align-items: center; font-weight: bold; }
         
-        .card-title { font-size: 0.85rem; font-weight: 700; color: white; white-space: normal; line-height: 1.2; text-shadow: 0 1px 2px black; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;}
-        .badge-ch { position: absolute; top: 8px; left: 8px; background: var(--accent); font-size: 0.7rem; font-weight: bold; padding: 4px 8px; border-radius: 4px; color: black; box-shadow: 0 2px 5px rgba(0,0,0,0.5); }
+        .reader-content { max-width: 800px; margin: 30px auto; padding: 0 20px; font-size: 1.15rem; line-height: 1.8; color: #ddd; text-align: justify; white-space: pre-wrap; }
+        .reader-title { text-align: center; font-size: 1.5rem; color: var(--accent); margin-bottom: 30px; font-weight: 800; }
 
-        /* --- READER (HALAMAN BACA) --- */
-        .reader-modal { position: fixed; inset: 0; background: var(--glass-bg); z-index: 200; overflow-y: auto; display: none; padding: 0; animation: fadeIn 0.3s; backdrop-filter: blur(15px); }
-        .reader-header { position: sticky; top: 0; background: rgba(10,10,10,0.95); padding: 15px; display: flex; align-items: center; border-bottom: 1px solid var(--accent); z-index: 210; }
-        body.light-mode .reader-header { background: rgba(240,240,240,0.95); }
-        
-        .btn-back { background: none; border: none; color: var(--accent); font-weight: bold; display: flex; align-items: center; gap: 5px; cursor: pointer; font-size: 1rem; }
-        .reader-title { margin-left: 15px; font-size: 1rem; font-weight: bold; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        
-        .reader-content { padding: 25px 5%; max-width: 800px; margin: 0 auto; font-size: 1.1rem; line-height: 1.8; color: var(--text-main); }
-        .reader-content img { max-width: 100%; border-radius: 8px; margin: 15px 0; display: block; }
-        .reader-content p { margin-bottom: 20px; text-align: justify; }
+        /* FAB ADMIN */
+        .fab { 
+            position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; 
+            background: var(--accent); color: white; border-radius: 50%; display: flex; 
+            justify-content: center; align-items: center; font-size: 30px; box-shadow: 0 4px 15px rgba(138,43,226,0.6); 
+            cursor: pointer; z-index: 90; display: none; transition: 0.3s;
+        }
+        .fab:hover { transform: scale(1.1); }
+        .admin-controls { display: none; justify-content: space-between; margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; }
+        .btn-danger { background: #ff5252; color: white; padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-        .fade-in { animation: fadeIn 0.5s forwards; }
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
     <header>
         <div class="logo">my<span>LN</span></div>
-        <div class="search-wrapper">
-            <input type="text" id="searchInput" placeholder="Cari Judul..." onkeyup="filterSearch()">
-            <span class="material-icons">search</span>
+        <div class="header-btn">
+            <span id="userStatus" style="font-size: 0.8rem; align-self: center; margin-right: 10px;"></span>
+            <button class="btn-icon" onclick="bukaLogin()" id="btnLogin"><span class="material-icons">login</span></button>
+            <button class="btn-icon hidden" onclick="logout()" id="btnLogout"><span class="material-icons">logout</span></button>
         </div>
-        <button class="btn-icon" onclick="toggleTheme()">
-            <span class="material-icons" id="themeIcon">light_mode</span>
-        </button>
     </header>
 
     <div class="main-content">
-        <div id="loadingMsg">Memuat dari Blogger...</div>
-        <div class="comic-grid" id="chapterList"></div>
+        <div class="grid-layout" id="chapterList"></div>
     </div>
 
-    <div class="reader-modal" id="readerModal">
-        <div class="reader-header">
-            <button class="btn-back" onclick="closeReader()">
-                <span class="material-icons">arrow_back</span> Kembali
-            </button>
-            <div class="reader-title" id="readerTitle">Judul Chapter</div>
+    <div class="fab" id="fabAdd" onclick="bukaFormTambah()">+</div>
+
+    <div class="modal-overlay hidden" id="loginModal">
+        <div class="modal-card">
+            <button class="btn-close" onclick="tutupLogin()"><span class="material-icons">close</span></button>
+            <h2>SYSTEM LOGIN</h2>
+            <input type="text" id="username" placeholder="Username" autocomplete="off">
+            <input type="password" id="password" placeholder="Password">
+            <p style="font-size: 11px; color: #aaa; margin-bottom: 15px; text-align: center;">Tamu -> guest / guest-guest</p>
+            <button class="btn-primary" onclick="prosesLogin()">MASUK</button>
+            <p class="error-text" id="loginError"></p>
         </div>
-        <div class="reader-content" id="readerBody">
+    </div>
+
+    <div class="modal-overlay hidden" id="formModal">
+        <div class="modal-card" style="max-width: 600px;">
+            <button class="btn-close" onclick="tutupForm()"><span class="material-icons">close</span></button>
+            <h2 id="formTitle">Tambah Chapter</h2>
+            <input type="hidden" id="editId">
+            <input type="text" id="inputJudul" placeholder="Judul Chapter (Cth: Log: Restart_Sequence)">
+            <input type="text" id="inputCover" placeholder="Link Gambar Cover (Opsional)">
+            <textarea id="inputIsi" placeholder="Tulis cerita di sini..."></textarea>
+            <button class="btn-primary" onclick="simpanChapter()">SIMPAN CERITA</button>
+        </div>
+    </div>
+
+    <div id="readerModal">
+        <div class="reader-nav">
+            <button onclick="tutupReader()"><span class="material-icons">arrow_back</span> Kembali</button>
+            <span style="font-weight: 800; color: var(--accent);">CODE:ZERO</span>
+            <div style="width: 24px;"></div> </div>
+        <div class="reader-content">
+            <div class="reader-title" id="readTitle"></div>
+            <div id="readBody"></div>
+            
+            <div class="admin-controls" id="adminControls">
+                <button class="btn-primary" id="btnEdit" style="width: 48%;">EDIT</button>
+                <button class="btn-danger" id="btnHapus">HAPUS</button>
             </div>
+        </div>
     </div>
 
     <script>
-        // LINK BLOGGER
-        const BLOG_URL = "https://mylnrill.blogspot.com/feeds/posts/default?alt=json";
-        let lnData = [];
+        // DATA BAWAAN JIKA KOSONG (Cerita Arata Kasuga)
+        const ceritaDefault = [
+            { id: 1, judul: "Log: Restart_Sequence", cover: "https://via.placeholder.com/300x400/111/fff?text=CH+1", isi: "Hujan deras mengguyur Shinjuku...\n\nArata Kasuga terbangun dalam raga Origin-0..." },
+            { id: 2, judul: "Pembenaran Logika yang Rusak", cover: "https://via.placeholder.com/300x400/111/fff?text=CH+2", isi: "Suara geraman Chimera itu menggetarkan pilar.\n\nIa memodifikasi gravitasi dan gaya gesek lantai." }
+        ];
+
+        // MENGAMBIL DATA DARI PENYIMPANAN HP/PC (LocalStorage)
+        let lnData = JSON.parse(localStorage.getItem('myLN_data')) || ceritaDefault;
+        let userSaatIni = localStorage.getItem('myLN_session') || '';
 
         // JALANKAN SAAT WEB DIBUKA
         document.addEventListener('DOMContentLoaded', () => {
-            fetchChapters();
+            cekAkses();
+            tampilkanDaftar();
         });
 
-        // FUNGSI TEMA (GELAP/TERANG)
-        function toggleTheme() {
-            document.body.classList.toggle('light-mode');
-            const icon = document.getElementById('themeIcon');
-            if(document.body.classList.contains('light-mode')) {
-                icon.innerText = 'dark_mode';
-            } else {
-                icon.innerText = 'light_mode';
-            }
-        }
-
-        // FUNGSI AMBIL DATA DARI BLOGGER
-        async function fetchChapters() {
-            try {
-                const response = await fetch(BLOG_URL);
-                const data = await response.json();
-                
-                if (!data.feed.entry) {
-                    document.getElementById('loadingMsg').innerText = "Belum ada chapter diposting.";
-                    return;
-                }
-
-                // Kita balik datanya agar chapter 1 di bawah, chapter terbaru di atas (opsional, bisa hapus .reverse() kalau mau dibalik)
-                lnData = data.feed.entry.reverse().map((post, index) => {
-                    
-                    // Ekstraksi Gambar: Sistem otomatis mencari gambar pertama dari Blogger untuk dijadikan cover
-                    let coverImg = 'https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?q=80&w=2670&auto=format&fit=crop';
-                    const doc = new DOMParser().parseFromString(post.content.$t, 'text/html');
-                    const imgTag = doc.querySelector('img');
-                    if (imgTag && imgTag.src) {
-                        coverImg = imgTag.src;
-                    }
-
-                    return {
-                        id: index + 1,
-                        title: post.title.$t,
-                        content: post.content.$t,
-                        cover: coverImg
-                    };
-                });
-
-                document.getElementById('loadingMsg').style.display = 'none';
-                renderChapters(lnData);
-            } catch (err) {
-                document.getElementById('loadingMsg').innerText = "Gagal terhubung ke Blogger.";
-            }
-        }
-
-        // FUNGSI TAMPILKAN GRID KARTU (GAYA KOMIK)
-        function renderChapters(data) {
+        // ================= FITUR TAMPILAN =================
+        function tampilkanDaftar() {
             const list = document.getElementById('chapterList');
             list.innerHTML = '';
-
-            data.forEach(ch => {
+            
+            lnData.forEach((ch, index) => {
                 const card = document.createElement('div');
-                card.className = 'comic-card fade-in';
-                // Saat kartu diklik, buka area baca
-                card.onclick = () => openReader(ch.id);
-
+                card.className = 'card';
+                card.onclick = () => bukaReader(ch.id);
                 card.innerHTML = `
-                    <div class="card-img-wrapper">
-                        <img class="card-img" src="${ch.cover}" alt="cover" loading="lazy">
-                    </div>
-                    <div class="badge-ch">CH ${ch.id}</div>
-                    <div class="card-overlay">
-                        <div class="card-title">${ch.title}</div>
+                    <div class="ch-badge">CH ${index + 1}</div>
+                    <img class="card-img" src="${ch.cover || 'https://via.placeholder.com/300x400/111/fff?text=NO+COVER'}" alt="cover">
+                    <div class="card-info">
+                        <div class="card-title">${ch.judul}</div>
                     </div>
                 `;
                 list.appendChild(card);
             });
         }
 
-        // FUNGSI PENCARIAN (SEARCH)
-        function filterSearch() {
-            const query = document.getElementById('searchInput').value.toLowerCase();
-            const filtered = lnData.filter(ch => ch.title.toLowerCase().includes(query));
-            renderChapters(filtered);
-        }
-
-        // FUNGSI BUKA HALAMAN BACA
-        function openReader(id) {
+        function bukaReader(id) {
             const ch = lnData.find(x => x.id === id);
             if(!ch) return;
 
-            document.getElementById('readerTitle').innerText = ch.title;
-            document.getElementById('readerBody').innerHTML = ch.content;
-            
+            document.getElementById('readTitle').innerText = ch.judul;
+            document.getElementById('readBody').innerText = ch.isi;
             document.getElementById('readerModal').style.display = 'block';
-            document.body.style.overflow = 'hidden'; // Mengunci scroll halaman utama
+
+            // Fitur Admin di dalam halaman baca
+            if(userSaatIni === 'admin') {
+                document.getElementById('adminControls').style.display = 'flex';
+                document.getElementById('btnEdit').onclick = () => bukaEdit(id);
+                document.getElementById('btnHapus').onclick = () => hapusChapter(id);
+            } else {
+                document.getElementById('adminControls').style.display = 'none';
+            }
         }
 
-        // FUNGSI KEMBALI DARI HALAMAN BACA
-        function closeReader() {
+        function tutupReader() {
             document.getElementById('readerModal').style.display = 'none';
-            document.body.style.overflow = 'auto'; // Membuka kembali scroll utama
+        }
+
+        // ================= FITUR ADMIN (TAMBAH, EDIT, HAPUS) =================
+        function bukaFormTambah() {
+            document.getElementById('formTitle').innerText = "Tambah Chapter Baru";
+            document.getElementById('editId').value = "";
+            document.getElementById('inputJudul').value = "";
+            document.getElementById('inputCover').value = "";
+            document.getElementById('inputIsi').value = "";
+            document.getElementById('formModal').classList.remove('hidden');
+        }
+
+        function bukaEdit(id) {
+            const ch = lnData.find(x => x.id === id);
+            document.getElementById('formTitle').innerText = "Edit Chapter";
+            document.getElementById('editId').value = ch.id;
+            document.getElementById('inputJudul').value = ch.judul;
+            document.getElementById('inputCover').value = ch.cover;
+            document.getElementById('inputIsi').value = ch.isi;
+            document.getElementById('formModal').classList.remove('hidden');
+            tutupReader();
+        }
+
+        function tutupForm() {
+            document.getElementById('formModal').classList.add('hidden');
+        }
+
+        function simpanChapter() {
+            const idEdit = document.getElementById('editId').value;
+            const judul = document.getElementById('inputJudul').value;
+            const cover = document.getElementById('inputCover').value;
+            const isi = document.getElementById('inputIsi').value;
+
+            if(!judul || !isi) return alert("Judul dan isi cerita tidak boleh kosong!");
+
+            if(idEdit) {
+                // Proses Edit
+                const index = lnData.findIndex(x => x.id == idEdit);
+                lnData[index] = { id: Number(idEdit), judul, cover, isi };
+            } else {
+                // Proses Tambah Baru
+                const idBaru = lnData.length > 0 ? lnData[lnData.length - 1].id + 1 : 1;
+                lnData.push({ id: idBaru, judul, cover, isi });
+            }
+
+            simpanKePenyimpanan();
+            tutupForm();
+            tampilkanDaftar();
+        }
+
+        function hapusChapter(id) {
+            if(confirm("Yakin ingin menghapus chapter ini?")) {
+                lnData = lnData.filter(x => x.id !== id);
+                simpanKePenyimpanan();
+                tutupReader();
+                tampilkanDaftar();
+            }
+        }
+
+        function simpanKePenyimpanan() {
+            localStorage.setItem('myLN_data', JSON.stringify(lnData));
+        }
+
+        // ================= FITUR LOGIN =================
+        function bukaLogin() { document.getElementById('loginModal').classList.remove('hidden'); }
+        function tutupLogin() { document.getElementById('loginModal').classList.add('hidden'); document.getElementById('loginError').innerText = ""; }
+
+        function prosesLogin() {
+            const u = document.getElementById('username').value.trim();
+            const p = document.getElementById('password').value.trim();
+            const err = document.getElementById('loginError');
+
+            if(u === 'admin' && p === 'adminsukamommy') { loginSukses('admin'); }
+            else if (u === 'guest' && p === 'guest-guest') { loginSukses('guest'); }
+            else { err.innerText = "Akses ditolak!"; }
+        }
+
+        function loginSukses(role) {
+            userSaatIni = role;
+            localStorage.setItem('myLN_session', role);
+            tutupLogin();
+            cekAkses();
+        }
+
+        function logout() {
+            userSaatIni = '';
+            localStorage.removeItem('myLN_session');
+            cekAkses();
+        }
+
+        function cekAkses() {
+            const status = document.getElementById('userStatus');
+            const btnMasuk = document.getElementById('btnLogin');
+            const btnKeluar = document.getElementById('btnLogout');
+            const tombolTambah = document.getElementById('fabAdd');
+
+            if(userSaatIni) {
+                status.innerText = userSaatIni.toUpperCase();
+                btnMasuk.classList.add('hidden');
+                btnKeluar.classList.remove('hidden');
+                
+                // Cuma admin yang bisa lihat tombol +
+                if(userSaatIni === 'admin') {
+                    tombolTambah.style.display = 'flex';
+                } else {
+                    tombolTambah.style.display = 'none';
+                }
+            } else {
+                status.innerText = '';
+                btnMasuk.classList.remove('hidden');
+                btnKeluar.classList.add('hidden');
+                tombolTambah.style.display = 'none';
+            }
         }
     </script>
 </body>
