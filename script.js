@@ -12,8 +12,9 @@ const iconSun = document.getElementById('icon-sun');
 const iconEyeOpen = document.getElementById('icon-eye-open');
 const iconEyeClosed = document.getElementById('icon-eye-closed');
 
+// INISIALISASI
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Tema
+    // 1. Tema Default (Gelap), Cek Storage
     const savedTheme = localStorage.getItem('myLN_theme');
     if (savedTheme === 'light') {
         document.body.classList.add('light-mode');
@@ -27,21 +28,128 @@ document.addEventListener('DOMContentLoaded', () => {
         updateNavToLoggedIn(savedUser);
     }
 
-    // 3. Tarik data (Tanpa Login)
+    // 3. Tarik data dari Blogger LANGSUNG
     fetchChapters();
 });
 
+// POPUP LOGIN
 function openLoginModal() { loginOverlay.classList.remove('hidden'); }
 function closeLoginModal() { 
     loginOverlay.classList.add('hidden'); 
     errorElement.innerText = "";
 }
 
+// FITUR MATA (PASSWORD)
 function togglePasswordVisibility() {
     const passInput = document.getElementById('password');
     if (passInput.type === 'password') {
         passInput.type = 'text';
         iconEyeOpen.classList.add('hidden');
+        iconEyeClosed.classList.remove('hidden');
+    } else {
+        passInput.type = 'password';
+        iconEyeOpen.classList.remove('hidden');
+        iconEyeClosed.classList.add('hidden');
+    }
+}
+
+// FITUR TEMA (ANIMASI BERULANG & GANTI IKON)
+function toggleTheme() {
+    const body = document.body;
+    const themeToggleBtn = document.querySelector('.theme-toggle');
+
+    // Paksa browser me-restart animasi spin
+    themeToggleBtn.classList.remove('spin');
+    void themeToggleBtn.offsetWidth; 
+    themeToggleBtn.classList.add('spin');
+
+    // Eksekusi ganti warna
+    body.classList.toggle('light-mode');
+    
+    if (body.classList.contains('light-mode')) {
+        iconMoon.classList.add('hidden');
+        iconSun.classList.remove('hidden');
+        localStorage.setItem('myLN_theme', 'light');
+    } else {
+        iconSun.classList.add('hidden');
+        iconMoon.classList.remove('hidden');
+        localStorage.setItem('myLN_theme', 'dark');
+    }
+}
+
+// LOGIKA LOGIN
+loginForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const u = document.getElementById('username').value.trim().toLowerCase();
+    const p = document.getElementById('password').value.trim();
+
+    if (u === 'admin' && p === 'adminsukamommy') { processLogin(u); } 
+    else if (u === 'guest' && p === 'guest-guest') { processLogin(u); } 
+    else { errorElement.innerText = "Username atau Sandi salah!"; }
+});
+
+function processLogin(role) {
+    localStorage.setItem('myLN_session', role);
+    closeLoginModal();
+    updateNavToLoggedIn(role);
+}
+
+function updateNavToLoggedIn(role) {
+    userTag.innerText = "USER: " + role.toUpperCase();
+    userTag.classList.remove('hidden');
+    authBtn.innerText = "LOGOUT";
+    authBtn.classList.add('btn-logout');
+    authBtn.classList.remove('btn-login-nav');
+    authBtn.onclick = logout;
+}
+
+function logout() {
+    localStorage.removeItem('myLN_session');
+    location.reload();
+}
+
+// AMBIL DATA DARI BLOGGER
+async function fetchChapters() {
+    try {
+        const response = await fetch(BLOG_URL);
+        const data = await response.json();
+        if (!data.feed.entry) {
+            document.getElementById('loading-msg').innerText = "Belum ada chapter.";
+            return;
+        }
+        LN_DATABASE = data.feed.entry.reverse().map((entry, index) => ({
+            id: index + 1,
+            title: entry.title.$t,
+            content: entry.content.$t
+        }));
+        document.getElementById('loading-msg').classList.add('hidden');
+        renderChapters();
+    } catch (err) {
+        document.getElementById('loading-msg').innerText = "Gagal memuat data dari Blogger.";
+    }
+}
+
+function renderChapters() {
+    const list = document.getElementById('chapter-list');
+    list.innerHTML = '';
+    LN_DATABASE.forEach(ch => {
+        const card = document.createElement('div');
+        card.className = 'chapter-card';
+        card.innerHTML = `<p style="color:var(--primary);font-size:12px;margin:0 0 5px 0;">CHAPTER 0${ch.id}</p><h3 style="margin:0">${ch.title}</h3>`;
+        card.onclick = () => openReader(ch.id);
+        list.appendChild(card);
+    });
+}
+
+function openReader(id) {
+    const chapter = LN_DATABASE.find(c => c.id === id);
+    document.getElementById('reader-title').innerText = chapter.title;
+    document.getElementById('reader-content').innerHTML = chapter.content;
+    document.getElementById('reader-view').classList.remove('hidden');
+    window.scrollTo(0, 0);
+}
+
+function closeReader() { document.getElementById('reader-view').classList.add('hidden'); }
         iconEyeClosed.classList.remove('hidden');
     } else {
         passInput.type = 'password';
