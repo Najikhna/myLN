@@ -5,9 +5,9 @@
     --text-main: #e0e0e0;
     --input-bg: #000;
     --border-color: #333;
+    --icon-color: #e0e0e0;
 }
 
-/* Warga Tema Terang (Light Mode) */
 body.light-mode {
     --primary: #6a0dad;
     --bg-dark: #f4f4f9;
@@ -15,6 +15,7 @@ body.light-mode {
     --text-main: #222222;
     --input-bg: #f9f9f9;
     --border-color: #ccc;
+    --icon-color: #222222;
 }
 
 body {
@@ -28,73 +29,36 @@ body {
 
 .hidden { display: none !important; }
 
-/* === PERBAIKAN TEMA TOGGLE BUTTON === */
-.theme-toggle {
-    position: absolute; top: 20px; right: 30px;
-    font-size: 28px; cursor: pointer; user-select: none;
-    transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-    z-index: 2001; /* Pastikan di atas segalanya */
-}
-/* Animasi putar saat diklik */
-.theme-toggle.spin { transform: rotate(360deg) scale(1.2); }
-
-/* === LOGIN OVERLAY === */
-.overlay {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: radial-gradient(circle, #1a1a2e 0%, var(--bg-dark) 100%);
-    display: flex; justify-content: center; align-items: center;
-    z-index: 2000; padding: 20px; box-sizing: border-box;
-    transition: transform 0.6s ease-in-out, background 0.5s ease;
-    
-    /* Tambahan agar penempatan tema bisa menggunakan posisi absolut */
-    position: relative; 
-}
-
-body.light-mode .overlay {
-    background: radial-gradient(circle, #d1c4e9 0%, var(--bg-dark) 100%);
-}
-
-.login-card {
-    background: var(--card-bg); padding: 40px 30px; border-radius: 12px;
-    border: 1px solid var(--primary); text-align: center; 
-    width: 100%; max-width: 350px; box-sizing: border-box;
-    box-shadow: 0 0 25px rgba(138, 43, 226, 0.2);
-    transition: background 0.5s ease;
-}
-
-.login-card h2 { font-family: 'Orbitron', sans-serif; margin-bottom: 20px; font-size: 24px; }
-.login-card span, .logo span { color: var(--primary); }
-
-/* === PERBAIKAN INPUT & PASSWORD MATA === */
-input {
-    width: 100%; padding: 12px; margin: 10px 0;
-    background: var(--input-bg); border: 1px solid var(--border-color); 
-    color: var(--text-main); box-sizing: border-box; border-radius: 4px; 
-    font-family: inherit; transition: 0.3s;
-}
-input:focus { outline: none; border-color: var(--primary); }
-
-/* Bidang pembungkus untuk menempatkan ikon mata secara absolut */
-.password-wrapper { position: relative; width: 100%; }
-.password-wrapper input { padding-right: 40px; } /* Ruang buat ikon mata di dalam input */
-
-#toggle-password {
-    position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
-    cursor: pointer; font-size: 18px; user-select: none; opacity: 0.7;
-    z-index: 1001; /* Di atas input field */
-}
-#toggle-password:hover { opacity: 1; }
-
-.guest-hint { font-size: 12px; color: #888; margin: 5px 0 15px 0; }
-.guest-hint span { color: var(--primary); font-weight: bold; }
-.btn-login, .btn-logout, .btn-finish { background: var(--primary); color: white; border: none; cursor: pointer; font-weight: bold; padding: 10px 20px; border-radius: 4px; }
-.btn-login { width: 100%; padding: 15px; transition: 0.3s; }
-.btn-login:hover { filter: brightness(1.2); }
-.error-msg { color: #ff3366; margin-top: 15px; font-size: 14px; min-height: 20px; }
-
-/* === APP UTAMA (Nav, Header, dll) === */
+/* === APP UTAMA & NAVIGASI === */
 nav { display: flex; justify-content: space-between; align-items: center; padding: 15px 5%; border-bottom: 1px solid var(--border-color); }
 .logo { font-family: 'Orbitron', sans-serif; font-size: 22px; font-weight: bold; }
+.logo span { color: var(--primary); }
+
+.nav-actions { display: flex; align-items: center; gap: 20px; }
+
+/* === TEMA TOGGLE === */
+.theme-toggle {
+    cursor: pointer; color: var(--icon-color);
+    transition: color 0.5s ease;
+    display: flex; align-items: center; justify-content: center;
+}
+@keyframes spinAnim {
+    0% { transform: rotate(0deg) scale(1); }
+    50% { transform: rotate(180deg) scale(1.2); }
+    100% { transform: rotate(360deg) scale(1); }
+}
+.theme-toggle.spin { animation: spinAnim 0.5s ease-in-out; }
+
+/* === TOMBOL === */
+.btn-login-nav, .btn-logout, .btn-finish, .btn-login-form { 
+    background: var(--primary); color: white; border: none; 
+    cursor: pointer; font-weight: bold; padding: 8px 16px; border-radius: 4px; transition: 0.3s;
+}
+.btn-login-nav:hover, .btn-login-form:hover { filter: brightness(1.2); }
+.btn-login-form { width: 100%; padding: 12px; margin-top: 10px; }
+.btn-logout { background: #ff3366; }
+
+/* === HEADER & LIST === */
 .hero-banner { padding: 40px 5%; background: linear-gradient(to bottom, rgba(138,43,226,0.1), transparent); }
 .hero-banner h1 { font-family: 'Orbitron', sans-serif; font-size: clamp(2rem, 5vw, 3rem); margin: 10px 0; }
 .badge { background: var(--primary); padding: 5px 10px; border-radius: 5px; font-size: 12px; color: white; }
@@ -103,8 +67,53 @@ nav { display: flex; justify-content: space-between; align-items: center; paddin
 
 .container { padding: 40px 5%; min-height: 50vh; }
 .chapter-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
-.chapter-card { background: var(--card-bg); padding: 20px; border-radius: 8px; border-left: 4px solid var(--border-color); cursor: pointer; transition: 0.3s; }
+.chapter-card { background: var(--card-bg); padding: 20px; border-radius: 8px; border-left: 4px solid var(--border-color); cursor: pointer; transition: 0.3s; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
 .chapter-card:hover { border-left-color: var(--primary); transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+
+/* === POPUP LOGIN OVERLAY === */
+.overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(5px);
+    display: flex; justify-content: center; align-items: center;
+    z-index: 3000; padding: 20px; box-sizing: border-box;
+}
+
+.login-card {
+    position: relative;
+    background: var(--card-bg); padding: 40px 30px; border-radius: 12px;
+    border: 1px solid var(--primary); text-align: center; 
+    width: 100%; max-width: 350px; box-sizing: border-box;
+    box-shadow: 0 0 25px rgba(138, 43, 226, 0.4);
+}
+.login-card h2 { font-family: 'Orbitron', sans-serif; margin-bottom: 5px; font-size: 24px; }
+.login-card span { color: var(--primary); }
+.close-modal {
+    position: absolute; top: 15px; right: 20px; font-size: 18px; 
+    cursor: pointer; color: var(--icon-color); transition: 0.3s;
+}
+.close-modal:hover { color: #ff3366; transform: scale(1.2); }
+
+/* === INPUT & IKON MATA === */
+input {
+    width: 100%; padding: 12px; margin: 10px 0;
+    background: var(--input-bg); border: 1px solid var(--border-color); 
+    color: var(--text-main); box-sizing: border-box; border-radius: 4px; 
+    font-family: inherit; transition: 0.3s;
+}
+input:focus { outline: none; border-color: var(--primary); }
+
+.password-wrapper { position: relative; width: 100%; }
+.password-wrapper input { padding-right: 40px; } 
+
+#toggle-password {
+    position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+    cursor: pointer; color: var(--icon-color);
+    z-index: 1001; opacity: 0.6; transition: 0.3s; display: flex; align-items: center;
+}
+#toggle-password:hover { opacity: 1; }
+
+.guest-hint { font-size: 12px; color: #888; margin: 5px 0 15px 0; }
+.error-msg { color: #ff3366; margin-top: 15px; font-size: 14px; min-height: 20px; }
 
 /* === READER === */
 #reader-view { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-dark); overflow-y: auto; z-index: 1500; transition: 0.5s ease; }
