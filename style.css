@@ -28,52 +28,48 @@ body {
 }
 
 .hidden { display: none !important; }
-
-/* EFEK KACA KONSISTEN */
 .glass-panel { background: var(--glass-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: var(--glass-border); box-shadow: var(--glass-shadow); }
 
-/* NAVBAR SCROLL PINTAR */
+/* NAVBAR SCROLL PINTAR - Z-INDEX TINGGI */
 header { 
-    position: fixed; top: 0; left: 0; width: 100%; z-index: 100; 
+    position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; 
     padding: 15px 5%; display: flex; align-items: center; justify-content: space-between; 
     transition: top 0.3s ease-in-out; 
 }
-.logo { font-family: 'Orbitron', sans-serif; font-size: 1.5rem; font-weight: 700; cursor: pointer;}
+.logo { font-family: 'Orbitron', sans-serif; font-size: 1.5rem; font-weight: 700; cursor: pointer; flex-shrink: 0; }
 .logo span { color: var(--primary); }
 
-.header-right { display: flex; align-items: center; gap: 5px; }
-.user-badge { font-family: 'Orbitron', sans-serif; font-size: 11px; margin-right: 10px; color: var(--primary); font-weight: bold;}
+.header-right { display: flex; align-items: center; gap: 8px; }
+.user-badge { font-family: 'Orbitron', sans-serif; font-size: 11px; color: var(--primary); font-weight: bold;}
 
-/* SEARCH BOX */
-.search-box { position: relative; display: flex; align-items: center; margin-right: 5px; }
+/* SEARCH BOX TETAP UKURANNYA BIAR GAK NABRAK TOMBOL */
+.search-box { position: relative; display: flex; align-items: center; }
 .search-box input { 
     background: rgba(0,0,0,0.4); border: 1px solid rgba(138,43,226,0.3); 
     color: var(--text-main); border-radius: 20px; padding: 6px 10px 6px 30px; 
-    width: 100px; font-family: 'Roboto', sans-serif; font-size: 0.85rem; 
-    transition: all 0.3s ease;
+    width: 120px; font-family: 'Roboto', sans-serif; font-size: 1rem; 
 }
-.search-box input:focus { width: 160px; border-color: var(--primary); }
+.search-box input:focus { border-color: var(--primary); }
 .search-box .material-icons { position: absolute; left: 8px; font-size: 18px; color: var(--primary); pointer-events: none; }
 body.light-mode .search-box input { background: rgba(255,255,255,0.6); color: black; border-color: rgba(106, 13, 173, 0.3); }
 
-.btn-icon { background: none; border: none; color: var(--text-main); cursor: pointer; padding: 8px; border-radius: 50%; display: flex; transition: 0.3s; }
-.btn-icon:hover { color: var(--primary); }
+/* TOMBOL AKSI ANTI-KEBAL/ANTI-TELAN */
+.btn-icon { 
+    background: transparent; border: none; color: var(--text-main); 
+    cursor: pointer; width: 40px; height: 40px; display: flex; 
+    align-items: center; justify-content: center; border-radius: 50%; 
+    transition: background 0.3s, color 0.3s; flex-shrink: 0; 
+}
+.btn-icon:hover { color: var(--primary); background: rgba(255,255,255,0.1); }
+.btn-icon span { pointer-events: none; } /* Ini yang mencegah ikon menelan sentuhan jari */
 
 @keyframes putar { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 .putar-animasi { animation: putar 0.5s ease; }
 
-/* ANIMASI ZOOM-IN & ZOOM-OUT UNTUK HALAMAN DETAIL */
-@keyframes zoomMasuk {
-    0% { transform: scale(0.9); opacity: 0; }
-    100% { transform: scale(1); opacity: 1; }
-}
-@keyframes zoomKeluar {
-    0% { transform: scale(1); opacity: 1; }
-    100% { transform: scale(0.9); opacity: 0; }
-}
+@keyframes zoomMasuk { 0% { transform: scale(0.9); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+@keyframes zoomKeluar { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(0.9); opacity: 0; } }
 .anim-zoom-in { animation: zoomMasuk 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
 .anim-zoom-out { animation: zoomKeluar 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
-
 .view-transisi { transition: opacity 0.3s; }
 
 /* --- VIEW 1: HALAMAN UTAMA --- */
@@ -82,21 +78,14 @@ body.light-mode .search-box input { background: rgba(255,255,255,0.6); color: bl
 .hero-banner h1 { font-family: 'Orbitron', sans-serif; font-size: 2rem; color: var(--primary); }
 
 .novel-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 15px; }
-.novel-card { 
-    border-radius: 8px; overflow: hidden; cursor: pointer; position: relative; 
-    transition: 0.3s; display: flex; flex-direction: column;
-}
+.novel-card { border-radius: 8px; overflow: hidden; cursor: pointer; position: relative; transition: 0.3s; display: flex; flex-direction: column; }
 .novel-card:hover { transform: translateY(-5px); border-color: var(--primary); }
 .card-img { width: 100%; aspect-ratio: 2/3; object-fit: cover; }
 .card-overlay { position: absolute; bottom: 0; left: 0; width: 100%; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); padding: 30px 10px 10px 10px; }
 .card-title { font-family: 'Orbitron', sans-serif; font-size: 0.9rem; font-weight: bold; color: white; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 
 /* --- VIEW 2: HALAMAN DETAIL (TACHIYOMI STYLE) --- */
-.detail-banner {
-    position: absolute; top: 0; left: 0; width: 100%; height: 350px;
-    background-size: cover; background-position: center;
-    filter: blur(8px) brightness(0.4); z-index: -1;
-}
+.detail-banner { position: absolute; top: 0; left: 0; width: 100%; height: 350px; background-size: cover; background-position: center; filter: blur(8px) brightness(0.4); z-index: -1; }
 body.light-mode .detail-banner { filter: blur(8px) brightness(0.8); }
 
 .detail-container { padding: 80px 5% 50px 5%; max-width: 800px; margin: 0 auto; }
@@ -121,7 +110,6 @@ body.light-mode .detail-banner { filter: blur(8px) brightness(0.8); }
 .chapter-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
 .chapter-header-row h3 { font-family: 'Orbitron', sans-serif; font-size: 1.1rem; }
 .chapter-list-container { display: flex; flex-direction: column; gap: 10px; }
-
 .chapter-item { background: var(--glass-bg); border: var(--glass-border); padding: 15px; border-radius: 6px; cursor: pointer; transition: 0.2s; display: flex; justify-content: space-between; align-items: center; }
 .chapter-item:hover { border-left: 4px solid var(--primary); background: rgba(138,43,226,0.1); }
 .chapter-item-title { font-weight: bold; font-size: 1rem; }
@@ -140,7 +128,7 @@ body.light-mode .modal-overlay { background: rgba(255, 255, 255, 0.6); }
 .btn-close-red:hover { transform: scale(1.1); background: #ff1f1f; }
 .login-title { text-align: center; margin-bottom: 25px; font-family: 'Orbitron', sans-serif; letter-spacing: 1px; }
 
-.input-form { width: 100%; padding: 12px; margin-bottom: 15px; background: var(--input-bg); border: 1px solid rgba(138,43,226,0.3); color: var(--text-main); border-radius: 6px; font-family: 'Roboto', sans-serif; }
+.input-form { width: 100%; padding: 12px; margin-bottom: 15px; background: var(--input-bg); border: 1px solid rgba(138,43,226,0.3); color: var(--text-main); border-radius: 6px; font-family: 'Roboto', sans-serif; font-size: 1rem; }
 .input-form:focus { border-color: var(--primary); }
 
 .pass-wrapper { position: relative; width: 100%; margin-bottom: 15px; }
