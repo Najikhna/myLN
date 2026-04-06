@@ -26,7 +26,6 @@
             <button class="btn-icon" onclick="togglePencarian()" id="btnSearchToggle" title="Cari">
                 <span class="material-icons">search</span>
             </button>
-            
             <button class="btn-icon" onclick="gantiTema()" title="Ganti Tema">
                 <span class="material-icons" id="iconTema">light_mode</span>
             </button>
@@ -44,9 +43,7 @@
     </div>
 
     <main id="viewUtama" class="main-content view-transisi">
-        <div class="hero-banner">
-            <h1>LIBRARY</h1>
-        </div>
+        <div class="hero-banner"><h1>LIBRARY</h1></div>
         <div class="novel-grid" id="gridNovel"></div>
         
         <button class="fab hidden" id="fabTambahNovel" onclick="bukaFormNovel()">
@@ -60,12 +57,10 @@
 
     <main id="viewDetail" class="hidden">
         <div class="detail-banner" id="detailBannerBg"></div>
-        
         <div class="detail-container">
             <button class="btn-back-detail" onclick="kembaliKeBeranda()">
                 <span class="material-icons">arrow_back</span> Kembali
             </button>
-            
             <div class="detail-header">
                 <img id="detailCover" src="" alt="Cover" class="detail-cover">
                 <div class="detail-info">
@@ -75,7 +70,6 @@
                     <p class="detail-genre">Genre: <span id="detailGenreteks">Unknown</span></p>
                 </div>
             </div>
-
             <div class="detail-actions">
                 <button class="btn-baca" onclick="bacaBabPertama()">
                     <span class="material-icons">menu_book</span> MULAI BACA
@@ -84,12 +78,10 @@
                     <span class="material-icons">delete</span>
                 </button>
             </div>
-
             <div class="detail-synopsis">
                 <h3>SINOPSIS</h3>
                 <p id="detailSinopsis">Teks sinopsis...</p>
             </div>
-
             <div class="detail-chapters">
                 <div class="chapter-header-row">
                     <h3>DAFTAR CHAPTER</h3>
@@ -102,14 +94,11 @@
 
     <div class="reader-modal hidden" id="modalBaca">
         <div class="reader-header" id="readerNav">
-            <button class="btn-back" onclick="tutupBaca()">
-                <span class="material-icons">arrow_back</span>
-            </button>
+            <button class="btn-back" onclick="tutupBaca()"><span class="material-icons">arrow_back</span></button>
             <h3 id="bacaJudulTeks">Judul Chapter</h3>
         </div>
         <div class="reader-content">
             <div id="bacaIsi" class="teks-cerita"></div>
-            
             <div id="aksiAdminChapter" class="admin-actions hidden">
                 <button class="btn-primary" onclick="editChapterDariBaca()" style="width: 48%;">EDIT</button>
                 <button class="btn-cancel" onclick="hapusChapterDariBaca()" style="width: 48%; border-color: #ff3366; color: #ff3366;">HAPUS</button>
@@ -136,11 +125,9 @@
             <h2 style="font-family:'Orbitron'; margin-bottom:15px;">Tambah Novel</h2>
             <input type="text" id="inJudulNovel" placeholder="Judul Novel" class="input-form">
             <input type="text" id="inGenreNovel" placeholder="Genre (Contoh: Action, Fantasy)" class="input-form">
-            
             <label style="font-size: 12px; color: var(--primary);">Upload Cover</label>
             <input type="file" id="inFileCover" accept="image/*" class="input-form" style="padding: 8px;">
             <input type="hidden" id="inBase64Cover"> 
-            
             <textarea id="inSinopsis" placeholder="Sinopsis..." class="input-form" style="height: 100px; resize: vertical;"></textarea>
             <button class="btn-primary" onclick="simpanNovel()" style="margin-bottom: 10px;">SIMPAN NOVEL</button>
             <button class="btn-cancel" onclick="tutupFormNovel()">BATAL</button>
@@ -166,8 +153,8 @@
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('sw.js')
-                .then(reg => console.log('Aplikasi siap mode Offline!'))
-                .catch(err => console.log('Gagal offline: ', err));
+                .then(reg => console.log('Aplikasi siap!'))
+                .catch(err => console.log('Gagal: ', err));
             });
         }
     </script>
