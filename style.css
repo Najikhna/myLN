@@ -1,6 +1,5 @@
-/* TEMA MODERN (UNGU / CYBER) */
 :root {
-    --primary: #8a2be2;
+    --primary: #8a2be2; 
     --bg-gradient: radial-gradient(circle at top, #1a1a2e 0%, #050508 100%);
     --glass-bg: rgba(17, 17, 25, 0.7);
     --glass-border: 1px solid rgba(138, 43, 226, 0.3);
@@ -44,11 +43,38 @@ header {
 
 .header-right { display: flex; align-items: center; gap: 5px; }
 .user-badge { font-family: 'Orbitron', sans-serif; font-size: 11px; margin-right: 10px; color: var(--primary); font-weight: bold;}
+
+/* SEARCH BOX */
+.search-box { position: relative; display: flex; align-items: center; margin-right: 5px; }
+.search-box input { 
+    background: rgba(0,0,0,0.4); border: 1px solid rgba(138,43,226,0.3); 
+    color: var(--text-main); border-radius: 20px; padding: 6px 10px 6px 30px; 
+    width: 100px; font-family: 'Roboto', sans-serif; font-size: 0.85rem; 
+    transition: all 0.3s ease;
+}
+.search-box input:focus { width: 160px; border-color: var(--primary); }
+.search-box .material-icons { position: absolute; left: 8px; font-size: 18px; color: var(--primary); pointer-events: none; }
+body.light-mode .search-box input { background: rgba(255,255,255,0.6); color: black; border-color: rgba(106, 13, 173, 0.3); }
+
 .btn-icon { background: none; border: none; color: var(--text-main); cursor: pointer; padding: 8px; border-radius: 50%; display: flex; transition: 0.3s; }
 .btn-icon:hover { color: var(--primary); }
 
 @keyframes putar { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 .putar-animasi { animation: putar 0.5s ease; }
+
+/* ANIMASI ZOOM-IN & ZOOM-OUT UNTUK HALAMAN DETAIL */
+@keyframes zoomMasuk {
+    0% { transform: scale(0.9); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+@keyframes zoomKeluar {
+    0% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(0.9); opacity: 0; }
+}
+.anim-zoom-in { animation: zoomMasuk 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+.anim-zoom-out { animation: zoomKeluar 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+
+.view-transisi { transition: opacity 0.3s; }
 
 /* --- VIEW 1: HALAMAN UTAMA --- */
 .main-content { padding: 90px 5% 100px 5%; max-width: 1000px; margin: 0 auto; min-height: 100dvh; }
@@ -80,8 +106,8 @@ body.light-mode .detail-banner { filter: blur(8px) brightness(0.8); }
 .detail-cover { width: 120px; aspect-ratio: 2/3; border-radius: 8px; object-fit: cover; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
 .detail-info { flex: 1; color: white; }
 .detail-info h2 { font-family: 'Orbitron', sans-serif; font-size: 1.5rem; margin-bottom: 5px; line-height: 1.2; text-shadow: 1px 1px 3px black;}
-.detail-author, .detail-status { font-size: 0.9rem; opacity: 0.8; margin-bottom: 3px; text-shadow: 1px 1px 3px black;}
-.detail-author span { color: #00f2fe; font-weight: bold; }
+.detail-author, .detail-status, .detail-genre { font-size: 0.85rem; opacity: 0.9; margin-bottom: 3px; text-shadow: 1px 1px 3px black;}
+.detail-author span, .detail-genre span { color: var(--primary); font-weight: bold; }
 
 .detail-actions { display: flex; gap: 10px; margin-bottom: 30px; }
 .btn-baca { flex: 1; background: var(--primary); color: white; font-family: 'Orbitron', sans-serif; font-weight: bold; padding: 12px; border: none; border-radius: 6px; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; transition: 0.2s; }
@@ -96,7 +122,6 @@ body.light-mode .detail-banner { filter: blur(8px) brightness(0.8); }
 .chapter-header-row h3 { font-family: 'Orbitron', sans-serif; font-size: 1.1rem; }
 .chapter-list-container { display: flex; flex-direction: column; gap: 10px; }
 
-/* KOTAK CHAPTER (PERSEGI PANJANG) */
 .chapter-item { background: var(--glass-bg); border: var(--glass-border); padding: 15px; border-radius: 6px; cursor: pointer; transition: 0.2s; display: flex; justify-content: space-between; align-items: center; }
 .chapter-item:hover { border-left: 4px solid var(--primary); background: rgba(138,43,226,0.1); }
 .chapter-item-title { font-weight: bold; font-size: 1rem; }
