@@ -14,16 +14,14 @@
         <div class="logo">my<span>LN</span></div>
         
         <div class="header-right">
-            <span id="teksUser" class="hidden user-badge"></span>
+            <span id="teksUser" class="hidden"></span>
             
             <button class="btn-icon" onclick="gantiTema()" title="Ganti Tema">
                 <span class="material-icons" id="iconTema">light_mode</span>
             </button>
-            
             <button class="btn-icon" onclick="bukaLogin()" id="btnLogin" title="Login">
                 <span class="material-icons">login</span>
             </button>
-            
             <button class="btn-icon hidden" onclick="logout()" id="btnLogout" title="Logout" style="color: #ff5252;">
                 <span class="material-icons">logout</span>
             </button>
@@ -31,8 +29,7 @@
     </header>
 
     <main class="main-content">
-        <div class="comic-grid" id="gridChapter">
-            </div>
+        <div class="comic-grid" id="gridChapter"></div>
     </main>
 
     <button class="fab hidden" id="fabTambah" onclick="bukaForm()">
@@ -42,7 +39,7 @@
     <div class="modal-overlay hidden" id="modalLogin">
         <div class="modal-card">
             <button class="btn-close-red" onclick="tutupLogin()">
-                <span class="material-icons">cancel</span>
+                <span class="material-icons" style="font-size: 18px;">close</span>
             </button>
             
             <h2 class="login-title">LOG-IN</h2>
@@ -66,7 +63,7 @@
             <h2 id="judulForm" style="margin-bottom: 15px;">Tambah Chapter</h2>
             <input type="hidden" id="editId">
             <input type="text" id="inJudul" placeholder="Judul Chapter" class="input-form">
-            <input type="text" id="inCover" placeholder="Link Gambar Cover (Opsional)" class="input-form">
+            <input type="text" id="inCover" placeholder="Link Cover (Opsional)" class="input-form">
             <textarea id="inCerita" placeholder="Tulis cerita di sini..." class="input-form" style="height: 200px; resize: vertical;"></textarea>
             <button class="btn-primary" onclick="simpanChapter()" style="margin-bottom: 10px;">SIMPAN</button>
             <button class="btn-cancel" onclick="tutupForm()">BATAL</button>
@@ -74,7 +71,7 @@
     </div>
 
     <div class="reader-modal hidden" id="modalBaca">
-        <div class="reader-header">
+        <div class="reader-header" id="readerNav">
             <button class="btn-back" onclick="tutupBaca()">
                 <span class="material-icons">arrow_back</span>
             </button>
@@ -84,8 +81,8 @@
             <div id="bacaIsi" class="teks-cerita"></div>
             
             <div id="aksiAdmin" class="admin-actions hidden">
-                <button class="btn-primary" onclick="editDariBaca()">EDIT</button>
-                <button class="btn-danger" onclick="hapusDariBaca()">HAPUS</button>
+                <button class="btn-primary" onclick="editDariBaca()" style="width: 48%;">EDIT</button>
+                <button class="btn-danger" onclick="hapusDariBaca()" style="width: 48%;">HAPUS</button>
             </div>
         </div>
     </div>
