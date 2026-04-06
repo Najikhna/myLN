@@ -1,7 +1,7 @@
 let dataLN = JSON.parse(localStorage.getItem('myln_data')) || [];
 let currentRole = localStorage.getItem('myln_role') || '';
 let idBacaSekarang = null;
-let posisiScrollTerakhir = 0;
+let lastScrollY = 0;
 
 document.addEventListener('DOMContentLoaded', () => {
     cekTema();
@@ -9,19 +9,31 @@ document.addEventListener('DOMContentLoaded', () => {
     renderGrid();
 });
 
-// --- FITUR NAVBAR AUTO-HIDE SAAT SCROLL ---
+// --- FITUR AUTO-HIDE NAVBAR & READER HEADER ---
 window.addEventListener('scroll', () => {
+    let currentScroll = window.scrollY;
     const navbar = document.getElementById('navbar');
-    let posisiScrollSekarang = window.pageYOffset || document.documentElement.scrollTop;
     
-    // Kalau scroll ke bawah (lebih dari 50px biar ga sensitif banget), sembunyikan navbar
-    if (posisiScrollSekarang > posisiScrollTerakhir && posisiScrollSekarang > 50) {
-        navbar.style.top = "-80px"; // Geser ke atas layar
+    // Auto-hide hanya bekerja kalau scroll lebih dari 50px ke bawah
+    if (currentScroll > lastScrollY && currentScroll > 50) {
+        navbar.style.top = "-80px"; 
     } else {
-        // Kalau scroll ke atas, munculkan lagi
-        navbar.style.top = "0";
+        navbar.style.top = "0"; 
     }
-    posisiScrollTerakhir = posisiScrollSekarang <= 0 ? 0 : posisiScrollSekarang; 
+    lastScrollY = currentScroll;
+});
+
+// Auto hide untuk modal baca
+document.getElementById('modalBaca').addEventListener('scroll', function() {
+    let currentScroll = this.scrollTop;
+    const readerNav = document.getElementById('readerNav');
+    
+    if (currentScroll > lastScrollY && currentScroll > 50) {
+        readerNav.style.top = "-80px"; 
+    } else {
+        readerNav.style.top = "0"; 
+    }
+    lastScrollY = currentScroll;
 });
 
 // --- FITUR TOAST ---
@@ -35,12 +47,11 @@ function showToast(pesan) {
 // --- FITUR TEMA (ANIMASI FIX) ---
 function gantiTema() {
     const iconBtn = document.getElementById('iconTema');
-    const btnContainer = iconBtn.parentElement;
     
-    // Ulangi Animasi Spin
-    btnContainer.classList.remove('putar-animasi');
-    void btnContainer.offsetWidth; // Trigger reflow
-    btnContainer.classList.add('putar-animasi');
+    // Animasi Spin
+    iconBtn.classList.remove('putar-animasi');
+    void iconBtn.offsetWidth; 
+    iconBtn.classList.add('putar-animasi');
 
     document.body.classList.toggle('light-mode');
     
@@ -62,7 +73,7 @@ function cekTema() {
     }
 }
 
-// --- FITUR LOGIN (MATA FIX) ---
+// --- FITUR LOG-IN ---
 function bukaLogin() { document.getElementById('modalLogin').classList.remove('hidden'); }
 function tutupLogin() { 
     document.getElementById('modalLogin').classList.add('hidden'); 
@@ -93,7 +104,7 @@ function prosesLogin() {
     } else if (user === 'guest' && pass === 'guest-guest') {
         loginSukses('guest');
     } else {
-        err.innerText = "Data tidak cocok!";
+        err.innerText = "Username atau sandi salah!";
     }
 }
 
@@ -102,7 +113,7 @@ function loginSukses(role) {
     localStorage.setItem('myln_role', role);
     tutupLogin();
     cekAksesLogin();
-    showToast("Login " + role.toUpperCase() + " Berhasil!");
+    showToast("Berhasil masuk sebagai " + role);
 }
 
 function logout() {
@@ -140,7 +151,7 @@ function renderGrid() {
     grid.innerHTML = '';
 
     if (dataLN.length === 0) {
-        grid.innerHTML = '<p style="color: #ccc; text-align: center; grid-column: 1/-1; margin-top: 50px;">Belum ada cerita. Login admin untuk menambah.</p>';
+        grid.innerHTML = '<p style="color: #ccc; text-align: center; grid-column: 1/-1; margin-top: 50px;">Belum ada cerita.</p>';
         return;
     }
 
@@ -210,6 +221,9 @@ function bukaBaca(id) {
     if (currentRole === 'admin') { document.getElementById('aksiAdmin').classList.remove('hidden'); } 
     else { document.getElementById('aksiAdmin').classList.add('hidden'); }
 
+    // Reset posisi navbar reader
+    document.getElementById('readerNav').style.top = "0";
+
     document.getElementById('modalBaca').classList.remove('hidden');
     document.body.style.overflow = 'hidden';
 }
@@ -236,7 +250,7 @@ function editDariBaca() {
 }
 
 function hapusDariBaca() {
-    if (confirm("Yakin ingin menghapus chapter ini selamanya?")) {
+    if (confirm("Yakin ingin menghapus chapter ini?")) {
         dataLN = dataLN.filter(c => c.id !== idBacaSekarang);
         localStorage.setItem('myln_data', JSON.stringify(dataLN));
         tutupBaca();
