@@ -3,6 +3,7 @@ let currentRole = '';
 let novelAktif = null;
 let chapterAktif = null;
 let lastScrollY = 0;
+let deferredPrompt; // Variabel untuk menyimpan event install aplikasi
 
 try {
     dataDatabase = JSON.parse(localStorage.getItem('myln_db'));
@@ -11,72 +12,95 @@ try {
     dataDatabase = [];
 }
 
+// PENANGKAP EVENT INSTALASI APLIKASI
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    // Tampilkan tombol download jika aplikasi belum diinstall
+    document.getElementById('fabInstallApp').classList.remove('hidden');
+});
+
+// FUNGSI SAAT TOMBOL DOWNLOAD DIKLIK
+function installAplikasi() {
+    if (confirm("Apakah benar ingin download aplikasinya my Light Novel?")) {
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then((choiceResult) => {
+                if (choiceResult.outcome === 'accepted') {
+                    showToast('Instalasi my Light Novel dimulai!');
+                }
+                deferredPrompt = null;
+                document.getElementById('fabInstallApp').classList.add('hidden');
+            });
+        }
+    }
+}
+
 // EKSEKUSI AMAN SETELAH WEB DIMUAT
 document.addEventListener('DOMContentLoaded', () => {
-    try {
-        currentRole = localStorage.getItem('myln_role') || '';
-        cekTema();
-        cekAksesLogin();
-        renderUtama();
+    currentRole = localStorage.getItem('myln_role') || '';
+    cekTema();
+    cekAksesLogin();
+    renderUtama();
 
-        // Safe Navbar Scroll
-        const navbar = document.getElementById('navbar');
-        window.addEventListener('scroll', () => {
-            let currentScroll = window.scrollY;
-            if(navbar) {
-                if (currentScroll > lastScrollY && currentScroll > 50) { navbar.style.top = "-80px"; } 
-                else { navbar.style.top = "0"; }
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+        let currentScroll = window.scrollY;
+        if(navbar) {
+            if (currentScroll > lastScrollY && currentScroll > 50) { 
+                navbar.style.top = "-80px"; 
+                document.getElementById('searchOverlay').style.top = "-80px"; // Sembunyikan juga search bar
+            } else { 
+                navbar.style.top = "0"; 
+                document.getElementById('searchOverlay').style.top = "70px"; 
             }
-            lastScrollY = currentScroll;
-        });
-
-        // Safe Reader Scroll
-        const modalBaca = document.getElementById('modalBaca');
-        const readerNav = document.getElementById('readerNav');
-        if(modalBaca && readerNav) {
-            modalBaca.addEventListener('scroll', function() {
-                let currentScroll = this.scrollTop;
-                if (currentScroll > lastScrollY && currentScroll > 50) { readerNav.style.top = "-80px"; } 
-                else { readerNav.style.top = "0"; }
-                lastScrollY = currentScroll;
-            });
         }
+        lastScrollY = currentScroll;
+    });
 
-        // Upload Cover Kompres Aman
-        const inputCover = document.getElementById('inFileCover');
-        if(inputCover) {
-            inputCover.addEventListener('change', function(e) {
-                const file = e.target.files[0];
-                if(!file) return;
-                
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = function(event) {
-                    const img = new Image();
-                    img.src = event.target.result;
-                    img.onload = function() {
-                        const canvas = document.createElement('canvas');
-                        const MAX_WIDTH = 400; 
-                        let scaleSize = MAX_WIDTH / img.width;
-                        if(scaleSize > 1) scaleSize = 1; 
-                        canvas.width = MAX_WIDTH;
-                        canvas.height = img.height * scaleSize;
-                        
-                        const ctx = canvas.getContext('2d');
-                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                        
-                        document.getElementById('inBase64Cover').value = canvas.toDataURL('image/jpeg', 0.8);
-                        showToast("Cover Siap!");
-                    }
+    // Upload Cover Kompres Aman
+    const inputCover = document.getElementById('inFileCover');
+    if(inputCover) {
+        inputCover.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if(!file) return;
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = function(event) {
+                const img = new Image();
+                img.src = event.target.result;
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const MAX_WIDTH = 400; 
+                    let scaleSize = MAX_WIDTH / img.width;
+                    if(scaleSize > 1) scaleSize = 1; 
+                    canvas.width = MAX_WIDTH;
+                    canvas.height = img.height * scaleSize;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    document.getElementById('inBase64Cover').value = canvas.toDataURL('image/jpeg', 0.8);
+                    showToast("Cover Siap!");
                 }
-            });
-        }
-    } catch(err) {
-        console.error("Gagal Inisiasi JS:", err);
+            }
+        });
     }
 });
 
-// --- FITUR PENCARIAN REAL-TIME ---
+// --- FITUR KOTAK PENCARIAN (BARU) ---
+function togglePencarian() {
+    const searchBox = document.getElementById('searchOverlay');
+    const inputCari = document.getElementById('inCariUtama');
+    
+    if (searchBox.classList.contains('hidden')) {
+        searchBox.classList.remove('hidden');
+        inputCari.focus(); // Langsung siap ngetik
+    } else {
+        searchBox.classList.add('hidden');
+        inputCari.value = ""; // Bersihkan
+        cariNovel(); // Reset list ke awal
+    }
+}
+
 function cariNovel() {
     const kataKunci = document.getElementById('inCariUtama').value.toLowerCase();
     const dataFilter = dataDatabase.filter(nvl => 
@@ -94,13 +118,13 @@ function showToast(pesan) {
     setTimeout(() => { x.className = x.className.replace('show', ''); }, 3000);
 }
 
-function gantiTema() {
+function gantiTema(e) {
+    if(e) e.stopPropagation();
     const iconBtn = document.getElementById('iconTema');
     if(iconBtn) {
         iconBtn.parentElement.classList.remove('putar-animasi');
         setTimeout(() => { iconBtn.parentElement.classList.add('putar-animasi'); }, 10);
     }
-
     document.body.classList.toggle('light-mode');
     if (document.body.classList.contains('light-mode')) {
         if(iconBtn) iconBtn.innerText = 'dark_mode'; 
@@ -123,7 +147,8 @@ function cekTema() {
 }
 
 // --- LOG-IN ---
-function bukaLogin() { 
+function bukaLogin(e) { 
+    if(e) e.stopPropagation();
     const m = document.getElementById('modalLogin');
     if(m) m.classList.remove('hidden'); 
 }
@@ -135,7 +160,6 @@ function tutupLogin() {
     document.getElementById('inUser').value = ""; document.getElementById('inPass').value = "";
 }
 
-// FITUR: Tahan Fokus (Anti Keyboard Tutup di HP)
 function lihatPassword(e) {
     e.preventDefault(); 
     const pass = document.getElementById('inPass'); 
@@ -172,34 +196,17 @@ function cekAksesLogin() {
     const fabTambahNovel = document.getElementById('fabTambahNovel');
     const teksUser = document.getElementById('teksUser');
     
-    const btnTambahCh = document.getElementById('btnTambahChapter');
-    const btnHapusNov = document.getElementById('btnHapusNovel');
-    const aksiAdminCh = document.getElementById('aksiAdminChapter');
-
     if (currentRole) {
         if(btnLogin) btnLogin.classList.add('hidden'); 
         if(btnLogout) btnLogout.classList.remove('hidden');
         if(teksUser) { teksUser.classList.remove('hidden'); teksUser.innerText = currentRole.toUpperCase(); }
-        
-        if (currentRole === 'admin') { 
-            if(fabTambahNovel) fabTambahNovel.classList.remove('hidden'); 
-            if(btnTambahCh) btnTambahCh.classList.remove('hidden');
-            if(btnHapusNov) btnHapusNov.classList.remove('hidden');
-            if(aksiAdminCh) aksiAdminCh.classList.remove('hidden');
-        } else { 
-            if(fabTambahNovel) fabTambahNovel.classList.add('hidden'); 
-            if(btnTambahCh) btnTambahCh.classList.add('hidden');
-            if(btnHapusNov) btnHapusNov.classList.add('hidden');
-            if(aksiAdminCh) aksiAdminCh.classList.add('hidden');
-        }
+        if (currentRole === 'admin') { if(fabTambahNovel) fabTambahNovel.classList.remove('hidden'); }
+        else { if(fabTambahNovel) fabTambahNovel.classList.add('hidden'); }
     } else {
         if(btnLogin) btnLogin.classList.remove('hidden'); 
         if(btnLogout) btnLogout.classList.add('hidden');
         if(teksUser) teksUser.classList.add('hidden'); 
         if(fabTambahNovel) fabTambahNovel.classList.add('hidden');
-        if(btnTambahCh) btnTambahCh.classList.add('hidden'); 
-        if(btnHapusNov) btnHapusNov.classList.add('hidden');
-        if(aksiAdminCh) aksiAdminCh.classList.add('hidden');
     }
 }
 
@@ -212,7 +219,7 @@ function renderUtama(dataCustom = null) {
     viewUtama.classList.remove('hidden');
     viewDetail.classList.add('hidden');
     document.getElementById('modalBaca').classList.add('hidden');
-    document.getElementById('boxCari').classList.remove('hidden'); 
+    document.getElementById('btnSearchToggle').classList.remove('hidden'); // Munculkan tombol search
 
     const grid = document.getElementById('gridNovel');
     if(!grid) return;
@@ -251,6 +258,7 @@ function kembaliKeBeranda() {
         viewUtama.style.opacity = '1';
         novelAktif = null;
         document.getElementById('inCariUtama').value = ''; 
+        document.getElementById('searchOverlay').classList.add('hidden');
         renderUtama();
         window.scrollTo(0,0);
     }, 280); 
@@ -266,11 +274,11 @@ function bukaDetail(idNovel) {
     const viewDetail = document.getElementById('viewDetail');
 
     viewUtama.style.opacity = '0';
-    document.getElementById('boxCari').classList.add('hidden'); 
+    document.getElementById('searchOverlay').classList.add('hidden'); // Sembunyikan kotak pencarian
+    document.getElementById('btnSearchToggle').classList.add('hidden'); // Sembunyikan tombol kaca pembesar
     
     setTimeout(() => {
         viewUtama.classList.add('hidden');
-        
         viewDetail.classList.remove('hidden');
         viewDetail.classList.remove('anim-zoom-out');
         viewDetail.classList.add('anim-zoom-in');
@@ -283,6 +291,15 @@ function bukaDetail(idNovel) {
         document.getElementById('detailJudul').innerText = nvl.judul;
         document.getElementById('detailGenreteks').innerText = nvl.genre || "Lainnya";
         document.getElementById('detailSinopsis').innerText = nvl.sinopsis || "Tidak ada sinopsis.";
+
+        // Cek Hak Akses Tombol Hapus & Tambah Chapter
+        if (currentRole === 'admin') { 
+            document.getElementById('btnHapusNovel').classList.remove('hidden');
+            document.getElementById('btnTambahChapter').classList.remove('hidden');
+        } else {
+            document.getElementById('btnHapusNovel').classList.add('hidden');
+            document.getElementById('btnTambahChapter').classList.add('hidden');
+        }
 
         renderListChapter(nvl.chapters);
     }, 150);
