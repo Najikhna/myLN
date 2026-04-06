@@ -1,14 +1,14 @@
-const CACHE_NAME = 'myln-offline-v1';
+const CACHE_NAME = 'myln-offline-v2'; // Ini diubah ke v2 biar HP tau ada update
 const urlsToCache = [
   '/',
   '/index.html',
   '/style.css',
   '/script.js',
-  '/icon.png',
   '/manifest.json'
 ];
 
 self.addEventListener('install', (event) => {
+  self.skipWaiting(); // Paksa update seketika
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       return cache.addAll(urlsToCache);
@@ -30,7 +30,7 @@ self.addEventListener('activate', (event) => {
       return Promise.all(
         cacheNames.map((cacheName) => {
           if (cacheName !== CACHE_NAME) {
-            return caches.delete(cacheName);
+            return caches.delete(cacheName); // Hapus memori yang jadul
           }
         })
       );
