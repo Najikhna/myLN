@@ -6,6 +6,13 @@
     <title>myLN | CODE:ZERO</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#8a2be2">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="myLN">
+    
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -16,10 +23,9 @@
         <div class="header-right">
             <span id="teksUser" class="hidden user-badge"></span>
             
-            <div class="search-box" id="boxCari">
+            <button class="btn-icon" onclick="togglePencarian()" id="btnSearchToggle" title="Cari">
                 <span class="material-icons">search</span>
-                <input type="text" id="inCariUtama" placeholder="Cari novel..." oninput="cariNovel()">
-            </div>
+            </button>
             
             <button class="btn-icon" onclick="gantiTema()" title="Ganti Tema">
                 <span class="material-icons" id="iconTema">light_mode</span>
@@ -33,14 +39,22 @@
         </div>
     </header>
 
+    <div id="searchOverlay" class="search-dropdown hidden">
+        <input type="text" id="inCariUtama" placeholder="Ketik judul atau genre novel..." autocomplete="off" oninput="cariNovel()">
+    </div>
+
     <main id="viewUtama" class="main-content view-transisi">
         <div class="hero-banner">
             <h1>LIBRARY</h1>
-            </div>
+        </div>
         <div class="novel-grid" id="gridNovel"></div>
         
         <button class="fab hidden" id="fabTambahNovel" onclick="bukaFormNovel()">
             <span class="material-icons">add</span>
+        </button>
+        
+        <button class="fab-left hidden" id="fabInstallApp" onclick="installAplikasi()">
+            <span class="material-icons">download</span>
         </button>
     </main>
 
@@ -66,7 +80,7 @@
                 <button class="btn-baca" onclick="bacaBabPertama()">
                     <span class="material-icons">menu_book</span> MULAI BACA
                 </button>
-                <button class="btn-admin-action hidden" id="btnHapusNovel" onclick="hapusNovel()" title="Hapus Novel">
+                <button class="btn-admin-action hidden" id="btnHapusNovel" onclick="hapusNovel()">
                     <span class="material-icons">delete</span>
                 </button>
             </div>
@@ -123,7 +137,7 @@
             <input type="text" id="inJudulNovel" placeholder="Judul Novel" class="input-form">
             <input type="text" id="inGenreNovel" placeholder="Genre (Contoh: Action, Fantasy)" class="input-form">
             
-            <label style="font-size: 12px; color: var(--primary);">Upload Cover (Otomatis Kompres)</label>
+            <label style="font-size: 12px; color: var(--primary);">Upload Cover</label>
             <input type="file" id="inFileCover" accept="image/*" class="input-form" style="padding: 8px;">
             <input type="hidden" id="inBase64Cover"> 
             
@@ -147,5 +161,15 @@
     <div id="toastBox">Pesan</div>
 
     <script src="script.js"></script>
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                .then(reg => console.log('Aplikasi siap mode Offline!'))
+                .catch(err => console.log('Gagal offline: ', err));
+            });
+        }
+    </script>
 </body>
 </html>
