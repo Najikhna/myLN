@@ -1,16 +1,30 @@
-// --- DATABASE LOKAL ---
 let dataLN = JSON.parse(localStorage.getItem('myln_data')) || [];
 let currentRole = localStorage.getItem('myln_role') || '';
 let idBacaSekarang = null;
+let posisiScrollTerakhir = 0;
 
-// --- JALANKAN SAAT WEB DIBUKA ---
 document.addEventListener('DOMContentLoaded', () => {
     cekTema();
     cekAksesLogin();
     renderGrid();
 });
 
-// --- FITUR TOAST (NOTIFIKASI BAWAH) ---
+// --- FITUR NAVBAR AUTO-HIDE SAAT SCROLL ---
+window.addEventListener('scroll', () => {
+    const navbar = document.getElementById('navbar');
+    let posisiScrollSekarang = window.pageYOffset || document.documentElement.scrollTop;
+    
+    // Kalau scroll ke bawah (lebih dari 50px biar ga sensitif banget), sembunyikan navbar
+    if (posisiScrollSekarang > posisiScrollTerakhir && posisiScrollSekarang > 50) {
+        navbar.style.top = "-80px"; // Geser ke atas layar
+    } else {
+        // Kalau scroll ke atas, munculkan lagi
+        navbar.style.top = "0";
+    }
+    posisiScrollTerakhir = posisiScrollSekarang <= 0 ? 0 : posisiScrollSekarang; 
+});
+
+// --- FITUR TOAST ---
 function showToast(pesan) {
     const x = document.getElementById('toastBox');
     x.innerText = pesan;
@@ -18,23 +32,29 @@ function showToast(pesan) {
     setTimeout(() => { x.className = x.className.replace('show', ''); }, 3000);
 }
 
-// --- FITUR TEMA (BULAN/MATAHARI) ---
+// --- FITUR TEMA (ANIMASI FIX) ---
 function gantiTema() {
+    const iconBtn = document.getElementById('iconTema');
+    const btnContainer = iconBtn.parentElement;
+    
+    // Ulangi Animasi Spin
+    btnContainer.classList.remove('putar-animasi');
+    void btnContainer.offsetWidth; // Trigger reflow
+    btnContainer.classList.add('putar-animasi');
+
     document.body.classList.toggle('light-mode');
-    const icon = document.getElementById('iconTema');
     
     if (document.body.classList.contains('light-mode')) {
-        icon.innerText = 'dark_mode'; // Kalau tema terang, tampilkan ikon bulan buat ganti ke gelap
+        iconBtn.innerText = 'dark_mode';
         localStorage.setItem('myln_tema', 'light');
     } else {
-        icon.innerText = 'light_mode'; // Kalau tema gelap, tampilkan ikon matahari buat ganti ke terang
+        iconBtn.innerText = 'light_mode';
         localStorage.setItem('myln_tema', 'dark');
     }
 }
 
 function cekTema() {
-    const tema = localStorage.getItem('myln_tema');
-    if (tema === 'light') {
+    if (localStorage.getItem('myln_tema') === 'light') {
         document.body.classList.add('light-mode');
         document.getElementById('iconTema').innerText = 'dark_mode';
     } else {
@@ -42,7 +62,7 @@ function cekTema() {
     }
 }
 
-// --- FITUR LOGIN ---
+// --- FITUR LOGIN (MATA FIX) ---
 function bukaLogin() { document.getElementById('modalLogin').classList.remove('hidden'); }
 function tutupLogin() { 
     document.getElementById('modalLogin').classList.add('hidden'); 
@@ -53,8 +73,14 @@ function tutupLogin() {
 
 function lihatPassword() {
     const pass = document.getElementById('inPass');
-    if (pass.type === 'password') { pass.type = 'text'; } 
-    else { pass.type = 'password'; }
+    const icon = document.getElementById('mataIcon');
+    if (pass.type === 'password') { 
+        pass.type = 'text'; 
+        icon.innerText = 'visibility_off';
+    } else { 
+        pass.type = 'password'; 
+        icon.innerText = 'visibility';
+    }
 }
 
 function prosesLogin() {
@@ -108,7 +134,7 @@ function cekAksesLogin() {
     }
 }
 
-// --- FITUR TAMPIL KOTAK CHAPTER ---
+// --- TAMPIL KOTAK CHAPTER ---
 function renderGrid() {
     const grid = document.getElementById('gridChapter');
     grid.innerHTML = '';
@@ -136,7 +162,7 @@ function renderGrid() {
     });
 }
 
-// --- FITUR FORM ADMIN (TAMBAH/EDIT) ---
+// --- FORM ADMIN ---
 function bukaForm() {
     document.getElementById('judulForm').innerText = "Tambah Chapter";
     document.getElementById('editId').value = "";
@@ -145,7 +171,6 @@ function bukaForm() {
     document.getElementById('inCerita').value = "";
     document.getElementById('modalForm').classList.remove('hidden');
 }
-
 function tutupForm() { document.getElementById('modalForm').classList.add('hidden'); }
 
 function simpanChapter() {
@@ -173,7 +198,7 @@ function simpanChapter() {
     renderGrid();
 }
 
-// --- FITUR HALAMAN BACA (READER) ---
+// --- HALAMAN BACA ---
 function bukaBaca(id) {
     const ch = dataLN.find(c => c.id === id);
     if (!ch) return;
