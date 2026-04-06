@@ -30,117 +30,103 @@ body {
 .hidden { display: none !important; }
 .glass-panel { background: var(--glass-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: var(--glass-border); box-shadow: var(--glass-shadow); }
 
-/* NAVBAR SCROLL PINTAR - Z-INDEX TINGGI */
+/* NAVBAR */
 header { 
     position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; 
-    padding: 15px 5%; display: flex; align-items: center; justify-content: space-between; 
+    padding: 10px 15px; display: flex; align-items: center; justify-content: space-between; 
     transition: top 0.3s ease-in-out; 
 }
-.logo { font-family: 'Orbitron', sans-serif; font-size: 1.5rem; font-weight: 700; cursor: pointer; flex-shrink: 0; }
+
+.logo { font-family: 'Orbitron', sans-serif; font-size: 1.4rem; font-weight: 700; cursor: pointer; flex-shrink: 0; z-index: 1010; }
 .logo span { color: var(--primary); }
 
-.header-right { display: flex; align-items: center; gap: 8px; }
-.user-badge { font-family: 'Orbitron', sans-serif; font-size: 11px; color: var(--primary); font-weight: bold;}
+.header-right { display: flex; align-items: center; gap: 5px; z-index: 1010; }
+.user-badge { font-family: 'Orbitron', sans-serif; font-size: 11px; color: var(--primary); font-weight: bold; margin-right: 5px;}
 
-/* SEARCH BOX TETAP UKURANNYA BIAR GAK NABRAK TOMBOL */
-.search-box { position: relative; display: flex; align-items: center; }
-.search-box input { 
-    background: rgba(0,0,0,0.4); border: 1px solid rgba(138,43,226,0.3); 
-    color: var(--text-main); border-radius: 20px; padding: 6px 10px 6px 30px; 
-    width: 120px; font-family: 'Roboto', sans-serif; font-size: 1rem; 
+/* KOTAK PENCARIAN DROPDOWN */
+.search-dropdown {
+    position: fixed; top: 70px; left: 50%; transform: translateX(-50%);
+    width: 90%; max-width: 400px; z-index: 990;
+    transition: opacity 0.3s, transform 0.3s;
 }
-.search-box input:focus { border-color: var(--primary); }
-.search-box .material-icons { position: absolute; left: 8px; font-size: 18px; color: var(--primary); pointer-events: none; }
-body.light-mode .search-box input { background: rgba(255,255,255,0.6); color: black; border-color: rgba(106, 13, 173, 0.3); }
+.search-dropdown input {
+    width: 100%; padding: 12px 20px; border-radius: 25px;
+    border: 2px solid var(--primary); background: var(--glass-bg);
+    color: var(--text-main); font-family: 'Roboto', sans-serif;
+    font-size: 1rem; box-shadow: var(--glass-shadow); backdrop-filter: blur(12px);
+}
+body.light-mode .search-dropdown input { background: rgba(255,255,255,0.9); color: black; }
 
-/* TOMBOL AKSI ANTI-KEBAL/ANTI-TELAN */
+/* TOMBOL ICON */
 .btn-icon { 
     background: transparent; border: none; color: var(--text-main); 
-    cursor: pointer; width: 40px; height: 40px; display: flex; 
+    cursor: pointer; width: 42px; height: 42px; display: flex; 
     align-items: center; justify-content: center; border-radius: 50%; 
-    transition: background 0.3s, color 0.3s; flex-shrink: 0; 
+    z-index: 1020; position: relative; pointer-events: auto; transition: 0.2s;
 }
-.btn-icon:hover { color: var(--primary); background: rgba(255,255,255,0.1); }
-.btn-icon span { pointer-events: none; } /* Ini yang mencegah ikon menelan sentuhan jari */
+.btn-icon:active { background: rgba(255,255,255,0.1); transform: scale(0.9); }
+.btn-icon span { pointer-events: none; }
 
-@keyframes putar { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+@keyframes putar { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 .putar-animasi { animation: putar 0.5s ease; }
 
-@keyframes zoomMasuk { 0% { transform: scale(0.9); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
-@keyframes zoomKeluar { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(0.9); opacity: 0; } }
-.anim-zoom-in { animation: zoomMasuk 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
-.anim-zoom-out { animation: zoomKeluar 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+@keyframes zoomMasuk { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+@keyframes zoomKeluar { from { transform: scale(1); opacity: 1; } to { transform: scale(0.9); opacity: 0; } }
+.anim-zoom-in { animation: zoomMasuk 0.3s ease-out forwards; }
+.anim-zoom-out { animation: zoomKeluar 0.3s ease-out forwards; }
 .view-transisi { transition: opacity 0.3s; }
 
 /* --- VIEW 1: HALAMAN UTAMA --- */
-.main-content { padding: 90px 5% 100px 5%; max-width: 1000px; margin: 0 auto; min-height: 100dvh; }
+.main-content { padding: 80px 5% 100px 5%; max-width: 1000px; margin: 0 auto; min-height: 100dvh; }
 .hero-banner { text-align: center; margin-bottom: 30px; }
 .hero-banner h1 { font-family: 'Orbitron', sans-serif; font-size: 2rem; color: var(--primary); }
-
 .novel-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 15px; }
-.novel-card { border-radius: 8px; overflow: hidden; cursor: pointer; position: relative; transition: 0.3s; display: flex; flex-direction: column; }
-.novel-card:hover { transform: translateY(-5px); border-color: var(--primary); }
+.novel-card { border-radius: 8px; overflow: hidden; cursor: pointer; position: relative; transition: 0.3s; }
 .card-img { width: 100%; aspect-ratio: 2/3; object-fit: cover; }
-.card-overlay { position: absolute; bottom: 0; left: 0; width: 100%; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); padding: 30px 10px 10px 10px; }
-.card-title { font-family: 'Orbitron', sans-serif; font-size: 0.9rem; font-weight: bold; color: white; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.card-overlay { position: absolute; bottom: 0; width: 100%; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); padding: 20px 10px 10px; }
+.card-title { font-family: 'Orbitron', sans-serif; font-size: 0.85rem; color: white; }
 
-/* --- VIEW 2: HALAMAN DETAIL (TACHIYOMI STYLE) --- */
-.detail-banner { position: absolute; top: 0; left: 0; width: 100%; height: 350px; background-size: cover; background-position: center; filter: blur(8px) brightness(0.4); z-index: -1; }
-body.light-mode .detail-banner { filter: blur(8px) brightness(0.8); }
-
-.detail-container { padding: 80px 5% 50px 5%; max-width: 800px; margin: 0 auto; }
-.btn-back-detail { background: none; border: none; color: white; display: flex; align-items: center; gap: 5px; cursor: pointer; font-family: 'Orbitron', sans-serif; margin-bottom: 20px; font-weight: bold;}
-
-.detail-header { display: flex; gap: 20px; align-items: flex-end; margin-bottom: 25px; }
-.detail-cover { width: 120px; aspect-ratio: 2/3; border-radius: 8px; object-fit: cover; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
-.detail-info { flex: 1; color: white; }
-.detail-info h2 { font-family: 'Orbitron', sans-serif; font-size: 1.5rem; margin-bottom: 5px; line-height: 1.2; text-shadow: 1px 1px 3px black;}
+/* --- VIEW 2: HALAMAN DETAIL --- */
+.detail-banner { position: absolute; top: 0; left: 0; width: 100%; height: 350px; background-size: cover; background-position: center; filter: blur(10px) brightness(0.4); z-index: -1; }
+.detail-container { padding: 80px 5% 50px; max-width: 800px; margin: 0 auto; }
+.btn-back-detail { background: none; border: none; color: white; cursor: pointer; margin-bottom: 20px; font-family: 'Orbitron'; font-weight: bold; display: flex; align-items: center; gap: 5px;}
+.detail-header { display: flex; gap: 20px; align-items: flex-end; margin-bottom: 20px; }
+.detail-cover { width: 110px; aspect-ratio: 2/3; border-radius: 8px; object-fit: cover; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+.detail-info h2 { font-family: 'Orbitron'; font-size: 1.4rem; text-shadow: 2px 2px 5px black; }
 .detail-author, .detail-status, .detail-genre { font-size: 0.85rem; opacity: 0.9; margin-bottom: 3px; text-shadow: 1px 1px 3px black;}
 .detail-author span, .detail-genre span { color: var(--primary); font-weight: bold; }
+.detail-actions { display: flex; gap: 10px; margin-bottom: 20px; }
+.btn-baca { flex: 1; background: var(--primary); color: white; border: none; padding: 12px; border-radius: 6px; font-family: 'Orbitron'; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; }
+.btn-admin-action { background: rgba(255,255,255,0.1); border: 1px solid var(--primary); color: white; padding: 10px; border-radius: 6px; cursor: pointer; }
 
-.detail-actions { display: flex; gap: 10px; margin-bottom: 30px; }
-.btn-baca { flex: 1; background: var(--primary); color: white; font-family: 'Orbitron', sans-serif; font-weight: bold; padding: 12px; border: none; border-radius: 6px; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; transition: 0.2s; }
-.btn-baca:hover { filter: brightness(1.2); }
-.btn-admin-action { background: rgba(255,255,255,0.1); border: 1px solid var(--primary); color: var(--text-main); padding: 8px 15px; border-radius: 6px; cursor: pointer; font-family: 'Orbitron', sans-serif; font-size: 12px;}
+.detail-synopsis { background: var(--glass-bg); padding: 15px; border-radius: 8px; margin-bottom: 20px; border: var(--glass-border); }
+.detail-synopsis h3 { font-family: 'Orbitron'; color: var(--primary); margin-bottom: 10px; font-size: 0.9rem; }
+.chapter-item { background: var(--glass-bg); border: var(--glass-border); padding: 15px; border-radius: 6px; margin-bottom: 10px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: 0.2s; }
 
-.detail-synopsis { margin-bottom: 30px; background: var(--glass-bg); padding: 15px; border-radius: 8px; border: var(--glass-border); }
-.detail-synopsis h3 { font-family: 'Orbitron', sans-serif; font-size: 1rem; color: var(--primary); margin-bottom: 10px; }
-.detail-synopsis p { font-size: 0.95rem; line-height: 1.6; text-align: justify; }
-
-.chapter-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-.chapter-header-row h3 { font-family: 'Orbitron', sans-serif; font-size: 1.1rem; }
-.chapter-list-container { display: flex; flex-direction: column; gap: 10px; }
-.chapter-item { background: var(--glass-bg); border: var(--glass-border); padding: 15px; border-radius: 6px; cursor: pointer; transition: 0.2s; display: flex; justify-content: space-between; align-items: center; }
-.chapter-item:hover { border-left: 4px solid var(--primary); background: rgba(138,43,226,0.1); }
-.chapter-item-title { font-weight: bold; font-size: 1rem; }
-.chapter-item-icon { opacity: 0.5; }
-
-/* FAB TAMBAH NOVEL */
-.fab { position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; background: var(--primary); color: white; border: none; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 15px rgba(138,43,226,0.4); cursor: pointer; z-index: 90; transition: 0.2s; }
-.fab:active { transform: scale(0.9); }
-
-/* MODAL LOGIN & FORM */
-.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); display: flex; justify-content: center; align-items: center; z-index: 1000; padding: 20px; transition: background 0.3s; }
-body.light-mode .modal-overlay { background: rgba(255, 255, 255, 0.6); }
-
-.modal-card { position: relative; width: 100%; max-width: 320px; padding: 30px; border-radius: 12px; }
-.btn-close-red { position: absolute; top: -12px; right: -12px; background: #ff5252; color: white; border: none; border-radius: 50%; width: 32px; height: 32px; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,0.5); transition: 0.2s; z-index: 10; }
-.btn-close-red:hover { transform: scale(1.1); background: #ff1f1f; }
-.login-title { text-align: center; margin-bottom: 25px; font-family: 'Orbitron', sans-serif; letter-spacing: 1px; }
-
-.input-form { width: 100%; padding: 12px; margin-bottom: 15px; background: var(--input-bg); border: 1px solid rgba(138,43,226,0.3); color: var(--text-main); border-radius: 6px; font-family: 'Roboto', sans-serif; font-size: 1rem; }
-.input-form:focus { border-color: var(--primary); }
-
-.pass-wrapper { position: relative; width: 100%; margin-bottom: 15px; }
-.pass-input { margin-bottom: 0 !important; padding-right: 45px !important; }
-.btn-eye { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: var(--text-main); cursor: pointer; opacity: 0.7; font-size: 20px; user-select: none; z-index: 10; }
-
+/* MODAL & FORM */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 2000; display: flex; justify-content: center; align-items: center; padding: 20px; }
+.modal-card { background: var(--glass-bg); border: var(--glass-border); padding: 30px; border-radius: 12px; width: 100%; max-width: 320px; position: relative; }
+.btn-close-red { position: absolute; top: -10px; right: -10px; background: #ff5252; color: white; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; z-index: 10; }
+.input-form { width: 100%; padding: 12px; margin-bottom: 15px; background: rgba(0,0,0,0.5); border: 1px solid var(--primary); color: white; border-radius: 6px; }
+.pass-wrapper { position: relative; }
+.btn-eye { position: absolute; right: 10px; top: 12px; color: white; cursor: pointer; z-index: 20; }
+.btn-primary { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 6px; font-family: 'Orbitron'; font-weight: bold; cursor: pointer; }
+.btn-cancel { width: 100%; padding: 12px; background: transparent; color: var(--text-main); border: 1px solid rgba(255,255,255,0.3); border-radius: 6px; cursor: pointer; font-weight: bold; }
 .error-msg { color: #ff5252; text-align: center; font-size: 12px; margin-top: 10px; min-height: 15px; font-weight: bold; }
-.btn-primary { width: 100%; padding: 12px; background: var(--primary); color: white; font-family: 'Orbitron', sans-serif; font-weight: bold; border: none; border-radius: 6px; cursor: pointer; }
-.btn-cancel { width: 100%; padding: 12px; background: transparent; color: var(--text-main); border: 1px solid rgba(255,255,255,0.3); border-radius: 6px; cursor: pointer; font-weight: bold; font-family: 'Orbitron', sans-serif; }
 
-/* HALAMAN BACA (READER) */
-.reader-modal { position: fixed; inset: 0; background: var(--bg-color); z-index: 2000; overflow-y: auto; display: flex; flex-direction: column; }
+/* READER */
+.reader-modal { position: fixed; inset: 0; background: var(--bg-color); z-index: 3000; overflow-y: auto; padding-top: 70px; }
+.reader-header { position: fixed; top: 0; width: 100%; background: var(--glass-bg); padding: 15px; display: flex; align-items: center; gap: 15px; border-bottom: var(--glass-border); z-index: 3100; }
+.teks-cerita { padding: 20px; font-size: 1.1rem; line-height: 1.8; white-space: pre-wrap; text-align: justify; }
+
+/* TOMBOL MENGAMBANG (FAB) */
+.fab { position: fixed; bottom: 20px; right: 20px; width: 56px; height: 56px; background: var(--primary); color: white; border: none; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 5px 15px rgba(0,0,0,0.5); cursor: pointer; z-index: 900; }
+.fab-left { position: fixed; bottom: 20px; left: 20px; width: 56px; height: 56px; background: #00f2fe; color: black; border: none; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 5px 15px rgba(0,242,254,0.5); cursor: pointer; z-index: 900; transition: 0.2s; }
+.fab-left:active { transform: scale(0.9); }
+
+#toastBox { visibility: hidden; position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: var(--primary); color: white; padding: 10px 20px; border-radius: 8px; z-index: 9999; font-weight: bold; }
+#toastBox.show { visibility: visible; }
+o; display: flex; flex-direction: column; }
 .reader-header { position: sticky; top: 0; background: var(--glass-bg); backdrop-filter: blur(12px); padding: 15px 20px; border-bottom: var(--glass-border); display: flex; align-items: center; gap: 15px; z-index: 2010; transition: top 0.3s; }
 .btn-back { background: none; border: none; color: var(--text-main); cursor: pointer; display: flex; align-items: center; }
 .reader-header h3 { font-size: 1.1rem; color: var(--primary); font-family: 'Orbitron', sans-serif; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
