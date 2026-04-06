@@ -20,26 +20,14 @@ body.light-mode {
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; outline: none; -webkit-tap-highlight-color: transparent; }
-
-body { 
-    font-family: 'Roboto', sans-serif; color: var(--text-main); 
-    min-height: 100dvh; background: var(--bg-gradient); 
-    transition: background 0.5s ease;
-}
-
+body { font-family: 'Roboto', sans-serif; color: var(--text-main); min-height: 100dvh; background: var(--bg-gradient); transition: background 0.5s ease; }
 .hidden { display: none !important; }
 .glass-panel { background: var(--glass-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: var(--glass-border); box-shadow: var(--glass-shadow); }
 
 /* NAVBAR */
-header { 
-    position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; 
-    padding: 10px 15px; display: flex; align-items: center; justify-content: space-between; 
-    transition: top 0.3s ease-in-out; 
-}
-
+header { position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; padding: 10px 15px; display: flex; align-items: center; justify-content: space-between; transition: top 0.3s ease-in-out; }
 .logo { font-family: 'Orbitron', sans-serif; font-size: 1.4rem; font-weight: 700; cursor: pointer; flex-shrink: 0; z-index: 1010; }
 .logo span { color: var(--primary); }
-
 .header-right { display: flex; align-items: center; gap: 5px; z-index: 1010; }
 .user-badge { font-family: 'Orbitron', sans-serif; font-size: 11px; color: var(--primary); font-weight: bold; margin-right: 5px;}
 
@@ -69,14 +57,13 @@ body.light-mode .search-dropdown input { background: rgba(255,255,255,0.9); colo
 
 @keyframes putar { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 .putar-animasi { animation: putar 0.5s ease; }
-
 @keyframes zoomMasuk { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 @keyframes zoomKeluar { from { transform: scale(1); opacity: 1; } to { transform: scale(0.9); opacity: 0; } }
 .anim-zoom-in { animation: zoomMasuk 0.3s ease-out forwards; }
 .anim-zoom-out { animation: zoomKeluar 0.3s ease-out forwards; }
 .view-transisi { transition: opacity 0.3s; }
 
-/* --- VIEW 1: HALAMAN UTAMA --- */
+/* HALAMAN UTAMA */
 .main-content { padding: 80px 5% 100px 5%; max-width: 1000px; margin: 0 auto; min-height: 100dvh; }
 .hero-banner { text-align: center; margin-bottom: 30px; }
 .hero-banner h1 { font-family: 'Orbitron', sans-serif; font-size: 2rem; color: var(--primary); }
@@ -86,7 +73,7 @@ body.light-mode .search-dropdown input { background: rgba(255,255,255,0.9); colo
 .card-overlay { position: absolute; bottom: 0; width: 100%; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); padding: 20px 10px 10px; }
 .card-title { font-family: 'Orbitron', sans-serif; font-size: 0.85rem; color: white; }
 
-/* --- VIEW 2: HALAMAN DETAIL --- */
+/* HALAMAN DETAIL */
 .detail-banner { position: absolute; top: 0; left: 0; width: 100%; height: 350px; background-size: cover; background-position: center; filter: blur(10px) brightness(0.4); z-index: -1; }
 .detail-container { padding: 80px 5% 50px; max-width: 800px; margin: 0 auto; }
 .btn-back-detail { background: none; border: none; color: white; cursor: pointer; margin-bottom: 20px; font-family: 'Orbitron'; font-weight: bold; display: flex; align-items: center; gap: 5px;}
@@ -98,7 +85,6 @@ body.light-mode .search-dropdown input { background: rgba(255,255,255,0.9); colo
 .detail-actions { display: flex; gap: 10px; margin-bottom: 20px; }
 .btn-baca { flex: 1; background: var(--primary); color: white; border: none; padding: 12px; border-radius: 6px; font-family: 'Orbitron'; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; }
 .btn-admin-action { background: rgba(255,255,255,0.1); border: 1px solid var(--primary); color: white; padding: 10px; border-radius: 6px; cursor: pointer; }
-
 .detail-synopsis { background: var(--glass-bg); padding: 15px; border-radius: 8px; margin-bottom: 20px; border: var(--glass-border); }
 .detail-synopsis h3 { font-family: 'Orbitron'; color: var(--primary); margin-bottom: 10px; font-size: 0.9rem; }
 .chapter-item { background: var(--glass-bg); border: var(--glass-border); padding: 15px; border-radius: 6px; margin-bottom: 10px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: 0.2s; }
@@ -126,17 +112,7 @@ body.light-mode .search-dropdown input { background: rgba(255,255,255,0.9); colo
 
 #toastBox { visibility: hidden; position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: var(--primary); color: white; padding: 10px 20px; border-radius: 8px; z-index: 9999; font-weight: bold; }
 #toastBox.show { visibility: visible; }
-o; display: flex; flex-direction: column; }
-.reader-header { position: sticky; top: 0; background: var(--glass-bg); backdrop-filter: blur(12px); padding: 15px 20px; border-bottom: var(--glass-border); display: flex; align-items: center; gap: 15px; z-index: 2010; transition: top 0.3s; }
-.btn-back { background: none; border: none; color: var(--text-main); cursor: pointer; display: flex; align-items: center; }
-.reader-header h3 { font-size: 1.1rem; color: var(--primary); font-family: 'Orbitron', sans-serif; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
-.reader-content { padding: 30px 20px; max-width: 800px; margin: 0 auto; width: 100%; }
-.teks-cerita { font-size: 1.15rem; line-height: 1.8; text-align: justify; white-space: pre-wrap; margin-bottom: 40px; }
-.admin-actions { display: flex; justify-content: space-between; gap: 10px; padding-top: 20px; border-top: var(--glass-border); }
-
-/* TOAST POPUP */
-#toastBox { visibility: hidden; min-width: 250px; background: var(--primary); color: white; text-align: center; border-radius: 8px; padding: 12px 20px; position: fixed; z-index: 9999; left: 50%; bottom: 30px; transform: translateX(-50%); font-family: 'Orbitron', sans-serif; font-weight: bold; box-shadow: 0 4px 12px rgba(0,0,0,0.5); }
+0%; bottom: 30px; transform: translateX(-50%); font-family: 'Orbitron', sans-serif; font-weight: bold; box-shadow: 0 4px 12px rgba(0,0,0,0.5); }
 #toastBox.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 2.5s; }
 @keyframes fadein { from { bottom: 0; opacity: 0; } to { bottom: 30px; opacity: 1; } }
 @keyframes fadeout { from { bottom: 30px; opacity: 1; } to { bottom: 0; opacity: 0; } }
