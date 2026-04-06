@@ -4,84 +4,131 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>myLN | CODE:ZERO</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <header id="navbar">
-        <div class="logo">my<span>LN</span></div>
+    <header id="navbar" class="glass-panel">
+        <div class="logo" onclick="kembaliKeBeranda()">my<span>LN</span></div>
         
         <div class="header-right">
-            <span id="teksUser" class="hidden"></span>
-            
+            <span id="teksUser" class="hidden user-badge"></span>
             <button class="btn-icon" onclick="gantiTema()" title="Ganti Tema">
                 <span class="material-icons" id="iconTema">light_mode</span>
             </button>
             <button class="btn-icon" onclick="bukaLogin()" id="btnLogin" title="Login">
                 <span class="material-icons">login</span>
             </button>
-            <button class="btn-icon hidden" onclick="logout()" id="btnLogout" title="Logout" style="color: #ff5252;">
+            <button class="btn-icon hidden" onclick="logout()" id="btnLogout" title="Logout" style="color: #ff3366;">
                 <span class="material-icons">logout</span>
             </button>
         </div>
     </header>
 
-    <main class="main-content">
-        <div class="comic-grid" id="gridChapter"></div>
+    <main id="viewUtama" class="main-content">
+        <div class="hero-banner">
+            <h1>LIBRARY</h1>
+            <p>Akses Database Novel</p>
+        </div>
+        <div class="novel-grid" id="gridNovel"></div>
+        
+        <button class="fab hidden" id="fabTambahNovel" onclick="bukaFormNovel()">
+            <span class="material-icons">add</span>
+        </button>
     </main>
 
-    <button class="fab hidden" id="fabTambah" onclick="bukaForm()">
-        <span class="material-icons">add</span>
-    </button>
-
-    <div class="modal-overlay hidden" id="modalLogin">
-        <div class="modal-card">
-            <button class="btn-close-red" onclick="tutupLogin()">
-                <span class="material-icons" style="font-size: 18px;">close</span>
+    <main id="viewDetail" class="hidden">
+        <div class="detail-banner" id="detailBannerBg"></div>
+        
+        <div class="detail-container">
+            <button class="btn-back-detail" onclick="kembaliKeBeranda()">
+                <span class="material-icons">arrow_back</span> Kembali
             </button>
             
-            <h2 class="login-title">LOG-IN</h2>
-            
-            <input type="text" id="inUser" placeholder="Username" autocomplete="off" class="input-form">
-            
-            <div class="pass-wrapper">
-                <input type="password" id="inPass" placeholder="Password" class="input-form pass-input">
-                <span class="material-icons btn-eye" onclick="lihatPassword()" id="mataIcon">visibility</span>
+            <div class="detail-header">
+                <img id="detailCover" src="" alt="Cover" class="detail-cover">
+                <div class="detail-info">
+                    <h2 id="detailJudul">Judul Novel</h2>
+                    <p class="detail-author">Author: <span>Admin</span></p>
+                    <p class="detail-status">Status: Ongoing</p>
+                </div>
             </div>
-            
-            <button class="btn-primary" onclick="prosesLogin()">MASUK</button>
-            <p id="errLogin" class="error-msg"></p>
-        </div>
-    </div>
 
-    <div class="modal-overlay hidden" id="modalForm">
-        <div class="modal-card" style="max-width: 600px;">
-            <h2 id="judulForm" style="margin-bottom: 15px;">Tambah Chapter</h2>
-            <input type="hidden" id="editId">
-            <input type="text" id="inJudul" placeholder="Judul Chapter" class="input-form">
-            <input type="text" id="inCover" placeholder="Link Cover (Opsional)" class="input-form">
-            <textarea id="inCerita" placeholder="Tulis cerita di sini..." class="input-form" style="height: 200px; resize: vertical;"></textarea>
-            <button class="btn-primary" onclick="simpanChapter()" style="margin-bottom: 10px;">SIMPAN</button>
-            <button class="btn-cancel" onclick="tutupForm()">BATAL</button>
+            <div class="detail-actions">
+                <button class="btn-baca" onclick="bacaBabPertama()">
+                    <span class="material-icons">menu_book</span> MULAI BACA
+                </button>
+                <button class="btn-admin-action hidden" id="btnHapusNovel" onclick="hapusNovel()"><span class="material-icons">delete</span></button>
+            </div>
+
+            <div class="detail-synopsis">
+                <h3>SINOPSIS</h3>
+                <p id="detailSinopsis">Teks sinopsis...</p>
+            </div>
+
+            <div class="detail-chapters">
+                <div class="chapter-header-row">
+                    <h3>DAFTAR CHAPTER</h3>
+                    <button class="btn-admin-action hidden" id="btnTambahChapter" onclick="bukaFormChapter()">+ CHAPTER</button>
+                </div>
+                <div id="listChapter" class="chapter-list-container"></div>
+            </div>
         </div>
-    </div>
+    </main>
 
     <div class="reader-modal hidden" id="modalBaca">
         <div class="reader-header" id="readerNav">
             <button class="btn-back" onclick="tutupBaca()">
                 <span class="material-icons">arrow_back</span>
             </button>
-            <h3 id="bacaJudul">Judul</h3>
+            <h3 id="bacaJudulTeks">Judul Chapter</h3>
         </div>
         <div class="reader-content">
             <div id="bacaIsi" class="teks-cerita"></div>
-            
-            <div id="aksiAdmin" class="admin-actions hidden">
-                <button class="btn-primary" onclick="editDariBaca()" style="width: 48%;">EDIT</button>
-                <button class="btn-danger" onclick="hapusDariBaca()" style="width: 48%;">HAPUS</button>
+            <div id="aksiAdminChapter" class="admin-actions hidden">
+                <button class="btn-primary" onclick="editChapterDariBaca()" style="width: 48%;">EDIT</button>
+                <button class="btn-cancel" onclick="hapusChapterDariBaca()" style="width: 48%; border-color: #ff3366; color: #ff3366;">HAPUS</button>
             </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay hidden" id="modalLogin">
+        <div class="modal-card glass-panel">
+            <button class="btn-close-red" onclick="tutupLogin()"><span class="material-icons" style="font-size:18px;">close</span></button>
+            <h2 class="login-title">LOG-IN</h2>
+            <input type="text" id="inUser" placeholder="Username" autocomplete="off" class="input-form">
+            <div class="pass-wrapper">
+                <input type="password" id="inPass" placeholder="Password" class="input-form pass-input">
+                <span class="material-icons btn-eye" onclick="lihatPassword()" id="mataIcon">visibility</span>
+            </div>
+            <button class="btn-primary" onclick="prosesLogin()">MASUK</button>
+            <p id="errLogin" class="error-msg"></p>
+        </div>
+    </div>
+
+    <div class="modal-overlay hidden" id="modalFormNovel">
+        <div class="modal-card glass-panel" style="max-width: 500px;">
+            <h2 style="font-family:'Orbitron'; margin-bottom:15px;">Tambah Novel</h2>
+            <input type="text" id="inJudulNovel" placeholder="Judul Novel" class="input-form">
+            
+            <label style="font-size: 12px; color: var(--primary);">Upload Cover (Otomatis Kompres)</label>
+            <input type="file" id="inFileCover" accept="image/*" class="input-form" style="padding: 8px;">
+            <input type="hidden" id="inBase64Cover"> <textarea id="inSinopsis" placeholder="Sinopsis..." class="input-form" style="height: 100px; resize: vertical;"></textarea>
+            <button class="btn-primary" onclick="simpanNovel()" style="margin-bottom: 10px;">SIMPAN NOVEL</button>
+            <button class="btn-cancel" onclick="tutupFormNovel()">BATAL</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay hidden" id="modalFormChapter">
+        <div class="modal-card glass-panel" style="max-width: 600px;">
+            <h2 id="judulFormChapter" style="font-family:'Orbitron'; margin-bottom:15px;">Tambah Chapter</h2>
+            <input type="hidden" id="editChapterId">
+            <input type="text" id="inJudulChapter" placeholder="Judul Chapter" class="input-form">
+            <textarea id="inIsiChapter" placeholder="Tulis cerita di sini..." class="input-form" style="height: 250px; resize: vertical;"></textarea>
+            <button class="btn-primary" onclick="simpanChapter()" style="margin-bottom: 10px;">SIMPAN CHAPTER</button>
+            <button class="btn-cancel" onclick="tutupFormChapter()">BATAL</button>
         </div>
     </div>
 
