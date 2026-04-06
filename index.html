@@ -15,6 +15,12 @@
         
         <div class="header-right">
             <span id="teksUser" class="hidden user-badge"></span>
+            
+            <div class="search-box" id="boxCari">
+                <span class="material-icons">search</span>
+                <input type="text" id="inCariUtama" placeholder="Cari novel..." oninput="cariNovel()">
+            </div>
+            
             <button class="btn-icon" onclick="gantiTema()" title="Ganti Tema">
                 <span class="material-icons" id="iconTema">light_mode</span>
             </button>
@@ -27,11 +33,10 @@
         </div>
     </header>
 
-    <main id="viewUtama" class="main-content">
+    <main id="viewUtama" class="main-content view-transisi">
         <div class="hero-banner">
             <h1>LIBRARY</h1>
-            <p>Akses Database Novel</p>
-        </div>
+            </div>
         <div class="novel-grid" id="gridNovel"></div>
         
         <button class="fab hidden" id="fabTambahNovel" onclick="bukaFormNovel()">
@@ -53,6 +58,7 @@
                     <h2 id="detailJudul">Judul Novel</h2>
                     <p class="detail-author">Author: <span>Admin</span></p>
                     <p class="detail-status">Status: Ongoing</p>
+                    <p class="detail-genre">Genre: <span id="detailGenreteks">Unknown</span></p>
                 </div>
             </div>
 
@@ -60,7 +66,9 @@
                 <button class="btn-baca" onclick="bacaBabPertama()">
                     <span class="material-icons">menu_book</span> MULAI BACA
                 </button>
-                <button class="btn-admin-action hidden" id="btnHapusNovel" onclick="hapusNovel()"><span class="material-icons">delete</span></button>
+                <button class="btn-admin-action hidden" id="btnHapusNovel" onclick="hapusNovel()" title="Hapus Novel">
+                    <span class="material-icons">delete</span>
+                </button>
             </div>
 
             <div class="detail-synopsis">
@@ -87,6 +95,7 @@
         </div>
         <div class="reader-content">
             <div id="bacaIsi" class="teks-cerita"></div>
+            
             <div id="aksiAdminChapter" class="admin-actions hidden">
                 <button class="btn-primary" onclick="editChapterDariBaca()" style="width: 48%;">EDIT</button>
                 <button class="btn-cancel" onclick="hapusChapterDariBaca()" style="width: 48%; border-color: #ff3366; color: #ff3366;">HAPUS</button>
@@ -101,7 +110,7 @@
             <input type="text" id="inUser" placeholder="Username" autocomplete="off" class="input-form">
             <div class="pass-wrapper">
                 <input type="password" id="inPass" placeholder="Password" class="input-form pass-input">
-                <span class="material-icons btn-eye" onclick="lihatPassword()" id="mataIcon">visibility</span>
+                <span class="material-icons btn-eye" onmousedown="lihatPassword(event)" ontouchstart="lihatPassword(event)" id="mataIcon">visibility</span>
             </div>
             <button class="btn-primary" onclick="prosesLogin()">MASUK</button>
             <p id="errLogin" class="error-msg"></p>
@@ -112,10 +121,13 @@
         <div class="modal-card glass-panel" style="max-width: 500px;">
             <h2 style="font-family:'Orbitron'; margin-bottom:15px;">Tambah Novel</h2>
             <input type="text" id="inJudulNovel" placeholder="Judul Novel" class="input-form">
+            <input type="text" id="inGenreNovel" placeholder="Genre (Contoh: Action, Fantasy)" class="input-form">
             
             <label style="font-size: 12px; color: var(--primary);">Upload Cover (Otomatis Kompres)</label>
             <input type="file" id="inFileCover" accept="image/*" class="input-form" style="padding: 8px;">
-            <input type="hidden" id="inBase64Cover"> <textarea id="inSinopsis" placeholder="Sinopsis..." class="input-form" style="height: 100px; resize: vertical;"></textarea>
+            <input type="hidden" id="inBase64Cover"> 
+            
+            <textarea id="inSinopsis" placeholder="Sinopsis..." class="input-form" style="height: 100px; resize: vertical;"></textarea>
             <button class="btn-primary" onclick="simpanNovel()" style="margin-bottom: 10px;">SIMPAN NOVEL</button>
             <button class="btn-cancel" onclick="tutupFormNovel()">BATAL</button>
         </div>
