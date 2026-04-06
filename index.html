@@ -4,99 +4,78 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>myLN | CODE:ZERO</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <header class="glass-panel">
+    <header>
         <div class="logo">my<span>LN</span></div>
         
-        <div class="header-actions">
-            <button class="btn-icon" onclick="gantiTema()" id="btnTheme" title="Ubah Tema">
-                <span class="material-icons" id="iconTheme">dark_mode</span>
+        <div class="header-right">
+            <span id="teksUser" class="hidden" style="font-size: 12px; font-weight: bold; margin-right: 10px;"></span>
+            <button class="btn-icon" onclick="gantiTema()" title="Ganti Tema">
+                <span class="material-icons" id="iconTema">light_mode</span>
             </button>
             <button class="btn-icon" onclick="bukaLogin()" id="btnLogin" title="Login">
                 <span class="material-icons">login</span>
             </button>
-            <button class="btn-icon hidden" onclick="keluarAkun()" id="btnLogout" title="Logout" style="color: #ff3366;">
+            <button class="btn-icon hidden" onclick="logout()" id="btnLogout" title="Logout" style="color: #ff5252;">
                 <span class="material-icons">logout</span>
             </button>
         </div>
     </header>
 
-    <div class="hero-banner">
-        <span class="badge">SERI ORIGINAL</span>
-        <h1>CODE:ZERO</h1>
-        <p>The Aetherian Architect</p>
-    </div>
+    <main class="main-content">
+        <div class="comic-grid" id="gridChapter">
+            </div>
+    </main>
 
-    <div class="main-content">
-        <div class="chapter-grid" id="gridChapter"></div>
-    </div>
-
-    <div class="fab hidden" id="fabTambah" onclick="bukaFormTambah()">
+    <button class="fab hidden" id="fabTambah" onclick="bukaForm()">
         <span class="material-icons">add</span>
-    </div>
+    </button>
 
     <div class="modal-overlay hidden" id="modalLogin">
-        <div class="modal-content glass-panel">
-            <h2>my<span>LN</span> LOGIN</h2>
-            <p style="text-align: center; font-size: 12px; color: #aaa; margin-bottom: 20px;">Akses Khusus Sistem</p>
-            
-            <div class="form-group">
-                <input type="text" id="inputUsername" placeholder="Username" autocomplete="off">
+        <div class="modal-card">
+            <h2 style="text-align: center; margin-bottom: 20px;">SYSTEM LOGIN</h2>
+            <input type="text" id="inUser" placeholder="Username" autocomplete="off" class="input-form">
+            <div style="position: relative; margin-bottom: 15px;">
+                <input type="password" id="inPass" placeholder="Password" class="input-form" style="margin-bottom: 0;">
+                <span class="material-icons btn-eye" onclick="lihatPassword()">visibility</span>
             </div>
-            
-            <div class="form-group password-box">
-                <input type="password" id="inputPassword" placeholder="Password">
-                <button type="button" onclick="togglePassword()" class="btn-eye">
-                    <span class="material-icons" id="eyeIcon">visibility</span>
-                </button>
-            </div>
-            
-            <p style="font-size: 11px; color: var(--primary); text-align: center; margin-bottom: 15px;">Admin: admin | Tamu: guest</p>
-            
-            <button class="btn-submit" onclick="prosesLogin()">INITIALIZE</button>
+            <p style="font-size: 11px; color: #ccc; text-align: center; margin-bottom: 15px;">Admin: admin | Tamu: guest</p>
+            <button class="btn-primary" onclick="prosesLogin()">MASUK</button>
             <button class="btn-cancel" onclick="tutupLogin()">BATAL</button>
-            <p id="pesanError" style="color: #ff3366; text-align: center; font-size: 12px; margin-top: 15px; min-height: 15px;"></p>
+            <p id="errLogin" style="color: #ff5252; text-align: center; font-size: 12px; margin-top: 10px;"></p>
         </div>
     </div>
 
     <div class="modal-overlay hidden" id="modalForm">
-        <div class="modal-content glass-panel" style="max-width: 600px;">
-            <h2 id="judulForm" style="font-family: 'Orbitron'; margin-bottom: 15px;">Tambah Chapter</h2>
+        <div class="modal-card" style="max-width: 600px;">
+            <h2 id="judulForm" style="margin-bottom: 15px;">Tambah Chapter</h2>
             <input type="hidden" id="editId">
-            <div class="form-group">
-                <input type="text" id="judulChapter" placeholder="Judul Chapter (Wajib)">
-            </div>
-            <div class="form-group">
-                <input type="text" id="coverChapter" placeholder="Link Cover Gambar (Opsional)">
-            </div>
-            <div class="form-group">
-                <textarea id="isiChapter" placeholder="Ketik cerita LN di sini..." style="height: 250px; resize: vertical;"></textarea>
-            </div>
-            <button class="btn-submit" onclick="simpanChapter()">SIMPAN CERITA</button>
+            <input type="text" id="inJudul" placeholder="Judul Chapter" class="input-form">
+            <input type="text" id="inCover" placeholder="Link Gambar Cover (Opsional)" class="input-form">
+            <textarea id="inCerita" placeholder="Tulis cerita di sini..." class="input-form" style="height: 200px; resize: vertical;"></textarea>
+            <button class="btn-primary" onclick="simpanChapter()">SIMPAN</button>
             <button class="btn-cancel" onclick="tutupForm()">BATAL</button>
         </div>
     </div>
 
-    <div class="reader-overlay hidden" id="modalBaca">
-        <div class="reader-header glass-panel">
-            <button class="btn-back" onclick="tutupBaca()"><span class="material-icons">arrow_back</span> KEMBALI</button>
+    <div class="reader-modal hidden" id="modalBaca">
+        <div class="reader-header">
+            <button class="btn-back" onclick="tutupBaca()">
+                <span class="material-icons">arrow_back</span>
+            </button>
             <h3 id="bacaJudul">Judul</h3>
         </div>
-        <div class="reader-body">
+        <div class="reader-content">
             <div id="bacaIsi" class="teks-cerita"></div>
             
-            <div class="admin-actions hidden" id="aksiAdmin">
-                <button class="btn-submit" onclick="editDariBaca()" style="width: 48%;">EDIT CHAPTER</button>
-                <button class="btn-cancel" onclick="hapusDariBaca()" style="width: 48%; color: #ff3366; border-color: #ff3366;">HAPUS</button>
-            </div>
-            
-            <div style="text-align: center; padding: 40px;">
-                <button class="btn-submit" onclick="tutupBaca()" style="max-width: 200px;">SELESAI MEMBACA</button>
+            <div id="aksiAdmin" class="admin-actions hidden">
+                <button class="btn-primary" onclick="editDariBaca()">EDIT</button>
+                <button class="btn-danger" onclick="hapusDariBaca()">HAPUS</button>
             </div>
         </div>
     </div>
@@ -106,125 +85,7 @@
     <script src="script.js"></script>
 </body>
 </html>
-        const list = document.getElementById('chapterList');
-            list.innerHTML = '';
-            
-            lnData.forEach((ch, index) => {
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.onclick = () => bukaReader(ch.id);
-                card.innerHTML = `
-                    <div class="ch-badge">CH ${index + 1}</div>
-                    <img class="card-img" src="${ch.cover || 'https://via.placeholder.com/300x400/111/fff?text=NO+COVER'}" alt="cover">
-                    <div class="card-info">
-                        <div class="card-title">${ch.judul}</div>
-                    </div>
-                `;
-                list.appendChild(card);
-            });
-        }
-
-        function bukaReader(id) {
-            const ch = lnData.find(x => x.id === id);
-            if(!ch) return;
-
-            document.getElementById('readTitle').innerText = ch.judul;
-            document.getElementById('readBody').innerText = ch.isi;
-            document.getElementById('readerModal').style.display = 'block';
-
-            // Fitur Admin di dalam halaman baca
-            if(userSaatIni === 'admin') {
-                document.getElementById('adminControls').style.display = 'flex';
-                document.getElementById('btnEdit').onclick = () => bukaEdit(id);
-                document.getElementById('btnHapus').onclick = () => hapusChapter(id);
-            } else {
-                document.getElementById('adminControls').style.display = 'none';
-            }
-        }
-
-        function tutupReader() {
-            document.getElementById('readerModal').style.display = 'none';
-        }
-
-        // ================= FITUR ADMIN (TAMBAH, EDIT, HAPUS) =================
-        function bukaFormTambah() {
-            document.getElementById('formTitle').innerText = "Tambah Chapter Baru";
-            document.getElementById('editId').value = "";
-            document.getElementById('inputJudul').value = "";
-            document.getElementById('inputCover').value = "";
-            document.getElementById('inputIsi').value = "";
-            document.getElementById('formModal').classList.remove('hidden');
-        }
-
-        function bukaEdit(id) {
-            const ch = lnData.find(x => x.id === id);
-            document.getElementById('formTitle').innerText = "Edit Chapter";
-            document.getElementById('editId').value = ch.id;
-            document.getElementById('inputJudul').value = ch.judul;
-            document.getElementById('inputCover').value = ch.cover;
-            document.getElementById('inputIsi').value = ch.isi;
-            document.getElementById('formModal').classList.remove('hidden');
-            tutupReader();
-        }
-
-        function tutupForm() {
-            document.getElementById('formModal').classList.add('hidden');
-        }
-
-        function simpanChapter() {
-            const idEdit = document.getElementById('editId').value;
-            const judul = document.getElementById('inputJudul').value;
-            const cover = document.getElementById('inputCover').value;
-            const isi = document.getElementById('inputIsi').value;
-
-            if(!judul || !isi) return alert("Judul dan isi cerita tidak boleh kosong!");
-
-            if(idEdit) {
-                // Proses Edit
-                const index = lnData.findIndex(x => x.id == idEdit);
-                lnData[index] = { id: Number(idEdit), judul, cover, isi };
-            } else {
-                // Proses Tambah Baru
-                const idBaru = lnData.length > 0 ? lnData[lnData.length - 1].id + 1 : 1;
-                lnData.push({ id: idBaru, judul, cover, isi });
-            }
-
-            simpanKePenyimpanan();
-            tutupForm();
-            tampilkanDaftar();
-        }
-
-        function hapusChapter(id) {
-            if(confirm("Yakin ingin menghapus chapter ini?")) {
-                lnData = lnData.filter(x => x.id !== id);
-                simpanKePenyimpanan();
-                tutupReader();
-                tampilkanDaftar();
-            }
-        }
-
-        function simpanKePenyimpanan() {
-            localStorage.setItem('myLN_data', JSON.stringify(lnData));
-        }
-
-        // ================= FITUR LOGIN =================
-        function bukaLogin() { document.getElementById('loginModal').classList.remove('hidden'); }
-        function tutupLogin() { document.getElementById('loginModal').classList.add('hidden'); document.getElementById('loginError').innerText = ""; }
-
-        function prosesLogin() {
-            const u = document.getElementById('username').value.trim();
-            const p = document.getElementById('password').value.trim();
-            const err = document.getElementById('loginError');
-
-            if(u === 'admin' && p === 'adminsukamommy') { loginSukses('admin'); }
-            else if (u === 'guest' && p === 'guest-guest') { loginSukses('guest'); }
-            else { err.innerText = "Akses ditolak!"; }
-        }
-
-        function loginSukses(role) {
-            userSaatIni = role;
-            localStorage.setItem('myLN_session', role);
-            tutupLogin();
+);
             cekAkses();
         }
 
