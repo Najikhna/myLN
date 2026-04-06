@@ -3,7 +3,7 @@ let currentRole = '';
 let novelAktif = null;
 let chapterAktif = null;
 let lastScrollY = 0;
-let deferredPrompt; // Variabel untuk menyimpan event install aplikasi
+let deferredPrompt; 
 
 try {
     dataDatabase = JSON.parse(localStorage.getItem('myln_db'));
@@ -12,15 +12,13 @@ try {
     dataDatabase = [];
 }
 
-// PENANGKAP EVENT INSTALASI APLIKASI
+// PENANGKAP INSTALASI APLIKASI
 window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
-    // Tampilkan tombol download jika aplikasi belum diinstall
     document.getElementById('fabInstallApp').classList.remove('hidden');
 });
 
-// FUNGSI SAAT TOMBOL DOWNLOAD DIKLIK
 function installAplikasi() {
     if (confirm("Apakah benar ingin download aplikasinya my Light Novel?")) {
         if (deferredPrompt) {
@@ -36,7 +34,6 @@ function installAplikasi() {
     }
 }
 
-// EKSEKUSI AMAN SETELAH WEB DIMUAT
 document.addEventListener('DOMContentLoaded', () => {
     currentRole = localStorage.getItem('myln_role') || '';
     cekTema();
@@ -49,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if(navbar) {
             if (currentScroll > lastScrollY && currentScroll > 50) { 
                 navbar.style.top = "-80px"; 
-                document.getElementById('searchOverlay').style.top = "-80px"; // Sembunyikan juga search bar
+                document.getElementById('searchOverlay').style.top = "-80px"; 
             } else { 
                 navbar.style.top = "0"; 
                 document.getElementById('searchOverlay').style.top = "70px"; 
@@ -58,7 +55,6 @@ document.addEventListener('DOMContentLoaded', () => {
         lastScrollY = currentScroll;
     });
 
-    // Upload Cover Kompres Aman
     const inputCover = document.getElementById('inFileCover');
     if(inputCover) {
         inputCover.addEventListener('change', function(e) {
@@ -86,18 +82,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// --- FITUR KOTAK PENCARIAN (BARU) ---
+// FUNGSI PENCARIAN
 function togglePencarian() {
     const searchBox = document.getElementById('searchOverlay');
     const inputCari = document.getElementById('inCariUtama');
     
     if (searchBox.classList.contains('hidden')) {
         searchBox.classList.remove('hidden');
-        inputCari.focus(); // Langsung siap ngetik
+        inputCari.focus(); 
     } else {
         searchBox.classList.add('hidden');
-        inputCari.value = ""; // Bersihkan
-        cariNovel(); // Reset list ke awal
+        inputCari.value = ""; 
+        cariNovel(); 
     }
 }
 
@@ -110,7 +106,7 @@ function cariNovel() {
     renderUtama(dataFilter);
 }
 
-// --- TOAST & TEMA ---
+// TOAST & TEMA
 function showToast(pesan) {
     const x = document.getElementById('toastBox');
     if(!x) return;
@@ -146,7 +142,7 @@ function cekTema() {
     }
 }
 
-// --- LOG-IN ---
+// LOG-IN
 function bukaLogin(e) { 
     if(e) e.stopPropagation();
     const m = document.getElementById('modalLogin');
@@ -210,7 +206,7 @@ function cekAksesLogin() {
     }
 }
 
-// --- DAFTAR NOVEL (BERANDA) ---
+// DAFTAR NOVEL (BERANDA)
 function renderUtama(dataCustom = null) {
     const viewUtama = document.getElementById('viewUtama');
     const viewDetail = document.getElementById('viewDetail');
@@ -219,7 +215,7 @@ function renderUtama(dataCustom = null) {
     viewUtama.classList.remove('hidden');
     viewDetail.classList.add('hidden');
     document.getElementById('modalBaca').classList.add('hidden');
-    document.getElementById('btnSearchToggle').classList.remove('hidden'); // Munculkan tombol search
+    document.getElementById('btnSearchToggle').classList.remove('hidden'); 
 
     const grid = document.getElementById('gridNovel');
     if(!grid) return;
@@ -264,7 +260,7 @@ function kembaliKeBeranda() {
     }, 280); 
 }
 
-// --- HALAMAN DETAIL NOVEL ---
+// HALAMAN DETAIL NOVEL
 function bukaDetail(idNovel) {
     const nvl = dataDatabase.find(n => n.id === idNovel);
     if(!nvl) return;
@@ -274,8 +270,8 @@ function bukaDetail(idNovel) {
     const viewDetail = document.getElementById('viewDetail');
 
     viewUtama.style.opacity = '0';
-    document.getElementById('searchOverlay').classList.add('hidden'); // Sembunyikan kotak pencarian
-    document.getElementById('btnSearchToggle').classList.add('hidden'); // Sembunyikan tombol kaca pembesar
+    document.getElementById('searchOverlay').classList.add('hidden'); 
+    document.getElementById('btnSearchToggle').classList.add('hidden'); 
     
     setTimeout(() => {
         viewUtama.classList.add('hidden');
@@ -292,7 +288,6 @@ function bukaDetail(idNovel) {
         document.getElementById('detailGenreteks').innerText = nvl.genre || "Lainnya";
         document.getElementById('detailSinopsis').innerText = nvl.sinopsis || "Tidak ada sinopsis.";
 
-        // Cek Hak Akses Tombol Hapus & Tambah Chapter
         if (currentRole === 'admin') { 
             document.getElementById('btnHapusNovel').classList.remove('hidden');
             document.getElementById('btnTambahChapter').classList.remove('hidden');
@@ -336,7 +331,7 @@ function bacaBabPertama() {
     }
 }
 
-// --- HALAMAN BACA ---
+// HALAMAN BACA
 function bukaBaca(idNovel, idChapter) {
     const nvl = dataDatabase.find(n => n.id === idNovel);
     if(!nvl) return;
@@ -361,7 +356,7 @@ function tutupBaca() {
     chapterAktif = null;
 }
 
-// --- ADMIN FITUR: NOVEL ---
+// ADMIN FITUR
 function bukaFormNovel() {
     document.getElementById('inJudulNovel').value = "";
     document.getElementById('inGenreNovel').value = ""; 
@@ -397,7 +392,6 @@ function hapusNovel() {
     }
 }
 
-// --- ADMIN FITUR: CHAPTER ---
 function bukaFormChapter() {
     document.getElementById('judulFormChapter').innerText = "Tambah Chapter";
     document.getElementById('editChapterId').value = "";
