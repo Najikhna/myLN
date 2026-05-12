@@ -5,6 +5,10 @@ let chapterAktif = null;
 let lastScrollY = 0;
 let deferredPrompt; 
 
+// Variabel untuk setting Reader
+let currentFontSize = 18;
+let currentPaper = 'dark';
+
 try {
     dataDatabase = JSON.parse(localStorage.getItem('myln_db'));
     if (!Array.isArray(dataDatabase)) dataDatabase = [];
@@ -12,7 +16,6 @@ try {
     dataDatabase = [];
 }
 
-// PENANGKAP INSTALASI APLIKASI
 window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
@@ -82,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// FUNGSI PENCARIAN
+// --- PENCARIAN ---
 function togglePencarian() {
     const searchBox = document.getElementById('searchOverlay');
     const inputCari = document.getElementById('inCariUtama');
@@ -106,7 +109,7 @@ function cariNovel() {
     renderUtama(dataFilter);
 }
 
-// TOAST & TEMA
+// --- TEMA & TOAST ---
 function showToast(pesan) {
     const x = document.getElementById('toastBox');
     if(!x) return;
@@ -142,7 +145,7 @@ function cekTema() {
     }
 }
 
-// LOG-IN
+// --- LOGIN ---
 function bukaLogin(e) { 
     if(e) e.stopPropagation();
     const m = document.getElementById('modalLogin');
@@ -206,7 +209,7 @@ function cekAksesLogin() {
     }
 }
 
-// DAFTAR NOVEL (BERANDA)
+// --- UTAMA ---
 function renderUtama(dataCustom = null) {
     const viewUtama = document.getElementById('viewUtama');
     const viewDetail = document.getElementById('viewDetail');
@@ -260,7 +263,7 @@ function kembaliKeBeranda() {
     }, 280); 
 }
 
-// HALAMAN DETAIL NOVEL
+// --- DETAIL ---
 function bukaDetail(idNovel) {
     const nvl = dataDatabase.find(n => n.id === idNovel);
     if(!nvl) return;
@@ -331,7 +334,35 @@ function bacaBabPertama() {
     }
 }
 
-// HALAMAN BACA
+// --- READER SETTING ---
+function toggleSettingBaca() {
+    document.getElementById('settingBacaBox').classList.toggle('hidden');
+}
+
+function ubahFontSize(n) {
+    currentFontSize += n;
+    if (currentFontSize < 12) currentFontSize = 12;
+    if (currentFontSize > 32) currentFontSize = 32;
+    
+    document.getElementById('bacaIsi').style.fontSize = currentFontSize + 'px';
+    document.getElementById('fontSizeTeks').innerText = currentFontSize + 'px';
+    localStorage.setItem('myln_font', currentFontSize);
+}
+
+function setPaper(type) {
+    const modal = document.getElementById('modalBaca');
+    modal.classList.remove('theme-white', 'theme-sepia', 'theme-dark');
+    modal.classList.add('theme-' + type);
+    
+    currentPaper = type;
+    localStorage.setItem('myln_paper', type);
+    
+    document.querySelectorAll('.paper').forEach(p => p.classList.remove('active'));
+    const targetPaper = document.querySelector('.paper.' + type);
+    if(targetPaper) targetPaper.classList.add('active');
+}
+
+// --- READER ---
 function bukaBaca(idNovel, idChapter) {
     const nvl = dataDatabase.find(n => n.id === idNovel);
     if(!nvl) return;
@@ -341,6 +372,15 @@ function bukaBaca(idNovel, idChapter) {
     chapterAktif = ch.id;
     document.getElementById('bacaJudulTeks').innerText = ch.judul;
     document.getElementById('bacaIsi').innerText = ch.isi;
+    
+    // Load Setting Kertas
+    const savedFont = localStorage.getItem('myln_font') || 18;
+    const savedPaper = localStorage.getItem('myln_paper') || 'dark';
+    
+    currentFontSize = parseInt(savedFont);
+    document.getElementById('bacaIsi').style.fontSize = currentFontSize + 'px';
+    document.getElementById('fontSizeTeks').innerText = currentFontSize + 'px';
+    setPaper(savedPaper);
     
     if (currentRole === 'admin') { document.getElementById('aksiAdminChapter').classList.remove('hidden'); } 
     else { document.getElementById('aksiAdminChapter').classList.add('hidden'); }
@@ -352,11 +392,12 @@ function bukaBaca(idNovel, idChapter) {
 
 function tutupBaca() {
     document.getElementById('modalBaca').classList.add('hidden');
+    document.getElementById('settingBacaBox').classList.add('hidden'); // Sembunyikan box setting
     document.body.style.overflow = 'auto';
     chapterAktif = null;
 }
 
-// ADMIN FITUR
+// --- ADMIN FITUR ---
 function bukaFormNovel() {
     document.getElementById('inJudulNovel').value = "";
     document.getElementById('inGenreNovel').value = ""; 
