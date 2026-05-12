@@ -1,4 +1,4 @@
-const CACHE_NAME = 'myln-offline-v3'; // Versi dinaikkan biar desain baru langsung muncul
+const CACHE_NAME = 'myln-offline-v4'; 
 const urlsToCache = [
   '/',
   '/index.html',
@@ -8,7 +8,7 @@ const urlsToCache = [
 ];
 
 self.addEventListener('install', (event) => {
-  self.skipWaiting();
+  self.skipWaiting(); // Paksa HP buat nendang cache yang lama
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       return cache.addAll(urlsToCache);
@@ -18,7 +18,7 @@ self.addEventListener('install', (event) => {
 
 self.addEventListener('fetch', (event) => {
   event.respondWith(
-    caches.match(event.request).then((response) => {
+    caches.match(event.request, {ignoreSearch: true}).then((response) => {
       return response || fetch(event.request);
     })
   );
@@ -30,7 +30,7 @@ self.addEventListener('activate', (event) => {
       return Promise.all(
         cacheNames.map((cacheName) => {
           if (cacheName !== CACHE_NAME) {
-            return caches.delete(cacheName);
+            return caches.delete(cacheName); // Bakar memori jadul
           }
         })
       );
