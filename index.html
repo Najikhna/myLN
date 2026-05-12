@@ -19,10 +19,8 @@
 
     <header id="navbar" class="glass-panel">
         <div class="logo" onclick="kembaliKeBeranda()">my<span>LN</span></div>
-        
         <div class="header-right">
             <span id="teksUser" class="hidden user-badge"></span>
-            
             <button class="btn-icon" onclick="togglePencarian()" id="btnSearchToggle" title="Cari">
                 <span class="material-icons">search</span>
             </button>
@@ -45,14 +43,8 @@
     <main id="viewUtama" class="main-content view-transisi">
         <div class="hero-banner"><h1>LIBRARY</h1></div>
         <div class="novel-grid" id="gridNovel"></div>
-        
-        <button class="fab hidden" id="fabTambahNovel" onclick="bukaFormNovel()">
-            <span class="material-icons">add</span>
-        </button>
-        
-        <button class="fab-left hidden" id="fabInstallApp" onclick="installAplikasi()">
-            <span class="material-icons">download</span>
-        </button>
+        <button class="fab hidden" id="fabTambahNovel" onclick="bukaFormNovel()"><span class="material-icons">add</span></button>
+        <button class="fab-left hidden" id="fabInstallApp" onclick="installAplikasi()"><span class="material-icons">download</span></button>
     </main>
 
     <main id="viewDetail" class="hidden">
@@ -71,12 +63,8 @@
                 </div>
             </div>
             <div class="detail-actions">
-                <button class="btn-baca" onclick="bacaBabPertama()">
-                    <span class="material-icons">menu_book</span> MULAI BACA
-                </button>
-                <button class="btn-admin-action hidden" id="btnHapusNovel" onclick="hapusNovel()">
-                    <span class="material-icons">delete</span>
-                </button>
+                <button class="btn-baca" onclick="bacaBabPertama()"><span class="material-icons">menu_book</span> MULAI BACA</button>
+                <button class="btn-admin-action hidden" id="btnHapusNovel" onclick="hapusNovel()"><span class="material-icons">delete</span></button>
             </div>
             <div class="detail-synopsis">
                 <h3>SINOPSIS</h3>
@@ -96,7 +84,26 @@
         <div class="reader-header" id="readerNav">
             <button class="btn-back" onclick="tutupBaca()"><span class="material-icons">arrow_back</span></button>
             <h3 id="bacaJudulTeks">Judul Chapter</h3>
+            <button class="btn-icon" onclick="toggleSettingBaca()" style="margin-left: auto;">
+                <span class="material-icons">settings</span>
+            </button>
         </div>
+
+        <div id="settingBacaBox" class="setting-reader-box hidden glass-panel">
+            <p>Ukuran Font</p>
+            <div class="font-controls">
+                <button onclick="ubahFontSize(-2)">A-</button>
+                <span id="fontSizeTeks">18px</span>
+                <button onclick="ubahFontSize(2)">A+</button>
+            </div>
+            <p>Tema Kertas</p>
+            <div class="theme-paper-controls">
+                <div class="paper white" onclick="setPaper('white')"></div>
+                <div class="paper sepia" onclick="setPaper('sepia')"></div>
+                <div class="paper dark" onclick="setPaper('dark')"></div>
+            </div>
+        </div>
+
         <div class="reader-content">
             <div id="bacaIsi" class="teks-cerita"></div>
             <div id="aksiAdminChapter" class="admin-actions hidden">
@@ -148,7 +155,6 @@
     <div id="toastBox">Pesan</div>
 
     <script src="script.js"></script>
-
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
