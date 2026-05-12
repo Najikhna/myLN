@@ -5,7 +5,6 @@ let chapterAktif = null;
 let lastScrollY = 0;
 let deferredPrompt; 
 
-// Variabel untuk setting Reader
 let currentFontSize = 18;
 let currentPaper = 'dark';
 
@@ -85,11 +84,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// --- PENCARIAN ---
 function togglePencarian() {
     const searchBox = document.getElementById('searchOverlay');
     const inputCari = document.getElementById('inCariUtama');
-    
     if (searchBox.classList.contains('hidden')) {
         searchBox.classList.remove('hidden');
         inputCari.focus(); 
@@ -109,7 +106,6 @@ function cariNovel() {
     renderUtama(dataFilter);
 }
 
-// --- TEMA & TOAST ---
 function showToast(pesan) {
     const x = document.getElementById('toastBox');
     if(!x) return;
@@ -145,7 +141,6 @@ function cekTema() {
     }
 }
 
-// --- LOGIN ---
 function bukaLogin(e) { 
     if(e) e.stopPropagation();
     const m = document.getElementById('modalLogin');
@@ -209,7 +204,6 @@ function cekAksesLogin() {
     }
 }
 
-// --- UTAMA ---
 function renderUtama(dataCustom = null) {
     const viewUtama = document.getElementById('viewUtama');
     const viewDetail = document.getElementById('viewDetail');
@@ -225,7 +219,6 @@ function renderUtama(dataCustom = null) {
     grid.innerHTML = '';
 
     const dataDitampilkan = dataCustom || dataDatabase;
-
     if (dataDitampilkan.length === 0) {
         grid.innerHTML = '<p style="color:#aaa; text-align:center; grid-column:1/-1;">Novel tidak ditemukan.</p>';
         return;
@@ -263,7 +256,6 @@ function kembaliKeBeranda() {
     }, 280); 
 }
 
-// --- DETAIL ---
 function bukaDetail(idNovel) {
     const nvl = dataDatabase.find(n => n.id === idNovel);
     if(!nvl) return;
@@ -277,6 +269,226 @@ function bukaDetail(idNovel) {
     document.getElementById('btnSearchToggle').classList.add('hidden'); 
     
     setTimeout(() => {
+        viewUtama.classList.add('hidden');
+        viewDetail.classList.remove('hidden');
+        viewDetail.classList.remove('anim-zoom-out');
+        viewDetail.classList.add('anim-zoom-in');
+        window.scrollTo(0,0);
+
+        const img = nvl.cover ? nvl.cover : 'https://via.placeholder.com/300x450/1a1a2e/8a2be2?text=CODE:ZERO';
+        
+        document.getElementById('detailCover').src = img;
+        document.getElementById('detailBannerBg').style.backgroundImage = `url(${img})`;
+        document.getElementById('detailJudul').innerText = nvl.judul;
+        document.getElementById('detailGenreteks').innerText = nvl.genre || "Lainnya";
+        document.getElementById('detailSinopsis').innerText = nvl.sinopsis || "Tidak ada sinopsis.";
+
+        if (currentRole === 'admin') { 
+            document.getElementById('btnHapusNovel').classList.remove('hidden');
+            document.getElementById('btnTambahChapter').classList.remove('hidden');
+        } else {
+            document.getElementById('btnHapusNovel').classList.add('hidden');
+            document.getElementById('btnTambahChapter').classList.add('hidden');
+        }
+        renderListChapter(nvl.chapters);
+    }, 150);
+}
+
+function renderListChapter(chapters) {
+    const list = document.getElementById('listChapter');
+    if(!list) return;
+    list.innerHTML = '';
+    
+    if(!chapters || chapters.length === 0) {
+        list.innerHTML = '<p style="text-align:center; color:#aaa;">Belum ada chapter.</p>';
+        return;
+    }
+
+    chapters.forEach(ch => {
+        const item = document.createElement('div');
+        item.className = 'chapter-item';
+        item.onclick = () => bukaBaca(novelAktif, ch.id);
+        item.innerHTML = `
+            <span class="chapter-item-title">${ch.judul}</span>
+            <span class="material-icons chapter-item-icon">play_circle_outline</span>
+        `;
+        list.appendChild(item);
+    });
+}
+
+function bacaBabPertama() {
+    const nvl = dataDatabase.find(n => n.id === novelAktif);
+    if(nvl && nvl.chapters && nvl.chapters.length > 0) {
+        bukaBaca(novelAktif, nvl.chapters[0].id);
+    } else {
+        showToast("Belum ada chapter buat dibaca!");
+    }
+}
+
+// --- FUNGSI SETTING BACA YANG SUDAH KEBAL BUG ---
+function toggleSettingBaca(e) {
+    if(e) { e.preventDefault(); e.stopPropagation(); }
+    const box = document.getElementById('settingBacaBox');
+    if(box) {
+        box.classList.toggle('hidden');
+    }
+}
+
+function ubahFontSize(n) {
+    currentFontSize += n;
+    if (currentFontSize < 12) currentFontSize = 12;
+    if (currentFontSize > 32) currentFontSize = 32;
+    
+    document.getElementById('bacaIsi').style.fontSize = currentFontSize + 'px';
+    document.getElementById('fontSizeTeks').innerText = currentFontSize + 'px';
+    localStorage.setItem('myln_font', currentFontSize);
+}
+
+function setPaper(type) {
+    const modal = document.getElementById('modalBaca');
+    modal.classList.remove('theme-white', 'theme-sepia', 'theme-dark');
+    modal.classList.add('theme-' + type);
+    
+    currentPaper = type;
+    localStorage.setItem('myln_paper', type);
+    
+    document.querySelectorAll('.paper').forEach(p => p.classList.remove('active'));
+    const targetPaper = document.querySelector('.paper.' + type);
+    if(targetPaper) targetPaper.classList.add('active');
+}
+
+function bukaBaca(idNovel, idChapter) {
+    const nvl = dataDatabase.find(n => n.id === idNovel);
+    if(!nvl) return;
+    const ch = nvl.chapters.find(c => c.id === idChapter);
+    if(!ch) return;
+
+    chapterAktif = ch.id;
+    document.getElementById('bacaJudulTeks').innerText = ch.judul;
+    document.getElementById('bacaIsi').innerText = ch.isi;
+    
+    const savedFont = localStorage.getItem('myln_font') || 18;
+    const savedPaper = localStorage.getItem('myln_paper') || 'dark';
+    
+    currentFontSize = parseInt(savedFont);
+    document.getElementById('bacaIsi').style.fontSize = currentFontSize + 'px';
+    document.getElementById('fontSizeTeks').innerText = currentFontSize + 'px';
+    setPaper(savedPaper);
+    
+    if (currentRole === 'admin') { document.getElementById('aksiAdminChapter').classList.remove('hidden'); } 
+    else { document.getElementById('aksiAdminChapter').classList.add('hidden'); }
+
+    document.getElementById('readerNav').style.top = "0";
+    document.getElementById('modalBaca').classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+}
+
+function tutupBaca() {
+    document.getElementById('modalBaca').classList.add('hidden');
+    document.getElementById('settingBacaBox').classList.add('hidden'); 
+    document.body.style.overflow = 'auto';
+    chapterAktif = null;
+}
+
+// --- ADMIN FITUR ---
+function bukaFormNovel() {
+    document.getElementById('inJudulNovel').value = "";
+    document.getElementById('inGenreNovel').value = ""; 
+    document.getElementById('inFileCover').value = "";
+    document.getElementById('inBase64Cover').value = "";
+    document.getElementById('inSinopsis').value = "";
+    document.getElementById('modalFormNovel').classList.remove('hidden');
+}
+function tutupFormNovel() { document.getElementById('modalFormNovel').classList.add('hidden'); }
+
+function simpanNovel() {
+    const judul = document.getElementById('inJudulNovel').value.trim();
+    const genre = document.getElementById('inGenreNovel').value.trim(); 
+    const cover = document.getElementById('inBase64Cover').value;
+    const sinopsis = document.getElementById('inSinopsis').value.trim();
+
+    if(!judul) return showToast("Judul wajib diisi!");
+
+    const idBaru = dataDatabase.length > 0 ? dataDatabase[dataDatabase.length - 1].id + 1 : 1;
+    dataDatabase.push({ id: idBaru, judul, genre, cover, sinopsis, chapters: [] });
+    
+    try {
+        localStorage.setItem('myln_db', JSON.stringify(dataDatabase));
+        tutupFormNovel(); renderUtama(); showToast("Novel Ditambahkan!");
+    } catch(e) { showToast("Memori Penuh! Hapus novel/chapter lain."); }
+}
+
+function hapusNovel() {
+    if(confirm("Hapus novel ini dan semua chapternya?")) {
+        dataDatabase = dataDatabase.filter(n => n.id !== novelAktif);
+        localStorage.setItem('myln_db', JSON.stringify(dataDatabase));
+        kembaliKeBeranda(); showToast("Novel Dihapus.");
+    }
+}
+
+function bukaFormChapter() {
+    document.getElementById('judulFormChapter').innerText = "Tambah Chapter";
+    document.getElementById('editChapterId').value = "";
+    document.getElementById('inJudulChapter').value = "";
+    document.getElementById('inIsiChapter').value = "";
+    document.getElementById('modalFormChapter').classList.remove('hidden');
+}
+function tutupFormChapter() { document.getElementById('modalFormChapter').classList.add('hidden'); }
+
+function simpanChapter() {
+    const nvlIndex = dataDatabase.findIndex(n => n.id === novelAktif);
+    if(nvlIndex === -1) return;
+
+    const idEdit = document.getElementById('editChapterId').value;
+    const judul = document.getElementById('inJudulChapter').value.trim();
+    const isi = document.getElementById('inIsiChapter').value.trim();
+
+    if(!judul || !isi) return showToast("Judul dan cerita wajib diisi!");
+
+    if(idEdit) {
+        const chIndex = dataDatabase[nvlIndex].chapters.findIndex(c => c.id == idEdit);
+        if(chIndex !== -1) {
+            dataDatabase[nvlIndex].chapters[chIndex] = { id: Number(idEdit), judul, isi };
+            showToast("Chapter Diperbarui.");
+        }
+    } else {
+        const arrCh = dataDatabase[nvlIndex].chapters;
+        const idBaru = arrCh.length > 0 ? arrCh[arrCh.length - 1].id + 1 : 1;
+        dataDatabase[nvlIndex].chapters.push({ id: idBaru, judul, isi });
+        showToast("Chapter Ditambahkan.");
+    }
+
+    try {
+        localStorage.setItem('myln_db', JSON.stringify(dataDatabase));
+        tutupFormChapter(); bukaDetail(novelAktif);
+    } catch(e) { showToast("Memori Penuh! Hapus file lain."); }
+}
+
+function editChapterDariBaca() {
+    const nvl = dataDatabase.find(n => n.id === novelAktif);
+    if(!nvl) return;
+    const ch = nvl.chapters.find(c => c.id === chapterAktif);
+    if(!ch) return;
+    
+    document.getElementById('judulFormChapter').innerText = "Edit Chapter";
+    document.getElementById('editChapterId').value = ch.id;
+    document.getElementById('inJudulChapter').value = ch.judul;
+    document.getElementById('inIsiChapter').value = ch.isi;
+    
+    tutupBaca();
+    document.getElementById('modalFormChapter').classList.remove('hidden');
+}
+
+function hapusChapterDariBaca() {
+    if(confirm("Yakin hapus chapter ini?")) {
+        const nvlIndex = dataDatabase.findIndex(n => n.id === novelAktif);
+        if(nvlIndex === -1) return;
+        dataDatabase[nvlIndex].chapters = dataDatabase[nvlIndex].chapters.filter(c => c.id !== chapterAktif);
+        localStorage.setItem('myln_db', JSON.stringify(dataDatabase));
+        tutupBaca(); bukaDetail(novelAktif); showToast("Chapter Dihapus.");
+    }
+}
+setTimeout(() => {
         viewUtama.classList.add('hidden');
         viewDetail.classList.remove('hidden');
         viewDetail.classList.remove('anim-zoom-out');
