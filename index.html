@@ -13,7 +13,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="myLN">
     
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=4">
 </head>
 <body>
 
@@ -84,12 +84,13 @@
         <div class="reader-header" id="readerNav">
             <button class="btn-back" onclick="tutupBaca()"><span class="material-icons">arrow_back</span></button>
             <h3 id="bacaJudulTeks">Judul Chapter</h3>
-            <button class="btn-icon" onclick="toggleSettingBaca()" style="margin-left: auto;">
+            
+            <button class="btn-icon" onclick="toggleSettingBaca(event)" ontouchstart="toggleSettingBaca(event)" style="margin-left: auto; position: relative; z-index: 9999;">
                 <span class="material-icons">settings</span>
             </button>
         </div>
 
-        <div id="settingBacaBox" class="setting-reader-box hidden glass-panel">
+        <div id="settingBacaBox" class="setting-reader-box hidden glass-panel" style="z-index: 9999;">
             <p>Ukuran Font</p>
             <div class="font-controls">
                 <button onclick="ubahFontSize(-2)">A-</button>
@@ -154,7 +155,7 @@
 
     <div id="toastBox">Pesan</div>
 
-    <script src="script.js"></script>
+    <script src="script.js?v=4"></script>
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
