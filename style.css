@@ -4,19 +4,30 @@ body.light-mode { --primary: #6a0dad; --bg-gradient: radial-gradient(circle at t
 body { font-family: 'Roboto', sans-serif; color: var(--text-main); min-height: 100dvh; background: var(--bg-gradient); transition: background 0.5s; overflow-x: hidden; }
 .hidden { display: none !important; }
 .glass-panel { background: var(--glass-bg); backdrop-filter: blur(12px); border: var(--glass-border); box-shadow: 0 8px 32px rgba(0,0,0,0.5); }
+
+/* NAVBAR KEMBALI NORMAL */
 header { position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; padding: 10px 15px; display: flex; align-items: center; justify-content: space-between; transition: 0.3s; }
-.logo { font-family: 'Orbitron'; font-size: 1.4rem; font-weight: 700; cursor: pointer; }
+.logo { font-family: 'Orbitron'; font-size: 1.4rem; font-weight: 700; cursor: pointer; position: relative; z-index: 1010; }
 .logo span { color: var(--primary); }
-.header-right { display: flex; align-items: center; gap: 5px; }
-.btn-icon { background: transparent; border: none; color: var(--text-main); cursor: pointer; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
+.header-right { display: flex; align-items: center; gap: 5px; position: relative; z-index: 1010; }
+
+/* PELINDUNG TOMBOL ANTI-MACET */
+.btn-icon { background: transparent; border: none; color: var(--text-main); cursor: pointer; width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; border-radius: 50%; z-index: 1020; position: relative; pointer-events: auto; transition: 0.2s; }
+.btn-icon:active { background: rgba(255,255,255,0.1); transform: scale(0.9); }
+.btn-icon span { pointer-events: none; } /* Kunci utama biar ikon gak nelan sentuhan jari */
+
 .search-dropdown { position: fixed; top: 70px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; z-index: 990; }
 .search-dropdown input { width: 100%; padding: 12px 20px; border-radius: 25px; border: 2px solid var(--primary); background: var(--glass-bg); color: var(--text-main); backdrop-filter: blur(12px); }
+
+/* UTAMA */
 .main-content { padding: 80px 5% 100px; max-width: 1000px; margin: 0 auto; }
 .hero-banner { text-align: center; margin-bottom: 30px; font-family: 'Orbitron'; color: var(--primary); }
 .novel-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 15px; }
 .novel-card { border-radius: 8px; overflow: hidden; position: relative; cursor: pointer; transition: 0.3s; }
 .card-img { width: 100%; aspect-ratio: 2/3; object-fit: cover; }
 .card-overlay { position: absolute; bottom: 0; width: 100%; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); padding: 20px 10px 10px; font-family: 'Orbitron'; font-size: 0.8rem; color: white; }
+
+/* DETAIL */
 .detail-banner { position: absolute; top: 0; left: 0; width: 100%; height: 350px; background-size: cover; background-position: center; filter: blur(10px) brightness(0.4); z-index: -1; }
 .detail-container { padding: 80px 5% 50px; max-width: 800px; margin: 0 auto; }
 .detail-header { display: flex; gap: 20px; align-items: flex-end; margin-bottom: 20px; }
@@ -25,6 +36,8 @@ header { position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; padding: 
 .btn-baca { flex: 1; background: var(--primary); color: white; border: none; padding: 12px; border-radius: 6px; font-family: 'Orbitron'; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer; }
 .detail-synopsis { background: var(--glass-bg); padding: 15px; border-radius: 8px; margin-bottom: 20px; border: var(--glass-border); font-size: 0.9rem; line-height: 1.6; }
 .chapter-item { background: var(--glass-bg); border: var(--glass-border); padding: 15px; border-radius: 6px; margin-bottom: 10px; cursor: pointer; display: flex; justify-content: space-between; }
+
+/* READER */
 .reader-modal { position: fixed; inset: 0; background: #050508; z-index: 3000; overflow-y: auto; padding-top: 70px; }
 .reader-header { position: fixed; top: 0; width: 100%; background: var(--glass-bg); padding: 15px; display: flex; align-items: center; gap: 15px; border-bottom: var(--glass-border); z-index: 3100; }
 .teks-cerita { padding: 20px; line-height: 1.8; text-align: justify; white-space: pre-wrap; }
@@ -44,6 +57,8 @@ header { position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; padding: 
 .reader-modal.theme-white { background: #fff !important; color: #111 !important; }
 .reader-modal.theme-sepia { background: #f4ecd8 !important; color: #433422 !important; }
 .reader-modal.theme-dark { background: #050508 !important; color: #e0e0e0 !important; }
+
+/* FAB & MODAL */
 .fab, .fab-left { position: fixed; bottom: 20px; width: 56px; height: 56px; border-radius: 50%; border: none; color: white; display: flex; align-items: center; justify-content: center; z-index: 900; }
 .fab { right: 20px; background: var(--primary); }
 .fab-left { left: 20px; background: #00f2fe; color: black; }
@@ -53,92 +68,3 @@ header { position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; padding: 
 .btn-close-red { position: absolute; top: -10px; right: -10px; background: #ff5252; color: white; border: none; border-radius: 50%; width: 30px; height: 30px; }
 #toastBox { visibility: hidden; position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: var(--primary); color: white; padding: 10px 20px; border-radius: 8px; z-index: 9999; }
 #toastBox.show { visibility: visible; }
-body.light-mode .search-dropdown input { background: rgba(255,255,255,0.9); color: black; }
-
-/* TOMBOL ICON */
-.btn-icon { background: transparent; border: none; color: var(--text-main); cursor: pointer; width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; border-radius: 50%; z-index: 1020; position: relative; pointer-events: auto; transition: 0.2s; }
-.btn-icon:active { background: rgba(255,255,255,0.1); transform: scale(0.9); }
-.btn-icon span { pointer-events: none; }
-.btn-back { background: transparent; border: none; color: var(--text-main); cursor: pointer; display: flex; align-items: center; padding: 5px; }
-
-@keyframes putar { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-.putar-animasi { animation: putar 0.5s ease; }
-@keyframes zoomMasuk { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-@keyframes zoomKeluar { from { transform: scale(1); opacity: 1; } to { transform: scale(0.9); opacity: 0; } }
-.anim-zoom-in { animation: zoomMasuk 0.3s ease-out forwards; }
-.anim-zoom-out { animation: zoomKeluar 0.3s ease-out forwards; }
-.view-transisi { transition: opacity 0.3s; }
-
-/* HALAMAN UTAMA */
-.main-content { padding: 80px 5% 100px 5%; max-width: 1000px; margin: 0 auto; min-height: 100dvh; }
-.hero-banner { text-align: center; margin-bottom: 30px; }
-.hero-banner h1 { font-family: 'Orbitron', sans-serif; font-size: 2rem; color: var(--primary); }
-.novel-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 15px; }
-.novel-card { border-radius: 8px; overflow: hidden; cursor: pointer; position: relative; transition: 0.3s; }
-.card-img { width: 100%; aspect-ratio: 2/3; object-fit: cover; }
-.card-overlay { position: absolute; bottom: 0; width: 100%; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); padding: 20px 10px 10px; }
-.card-title { font-family: 'Orbitron', sans-serif; font-size: 0.85rem; color: white; }
-
-/* HALAMAN DETAIL */
-.detail-banner { position: absolute; top: 0; left: 0; width: 100%; height: 350px; background-size: cover; background-position: center; filter: blur(10px) brightness(0.4); z-index: -1; }
-.detail-container { padding: 80px 5% 50px; max-width: 800px; margin: 0 auto; }
-.btn-back-detail { background: none; border: none; color: white; cursor: pointer; margin-bottom: 20px; font-family: 'Orbitron'; font-weight: bold; display: flex; align-items: center; gap: 5px;}
-.detail-header { display: flex; gap: 20px; align-items: flex-end; margin-bottom: 20px; }
-.detail-cover { width: 110px; aspect-ratio: 2/3; border-radius: 8px; object-fit: cover; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
-.detail-info h2 { font-family: 'Orbitron'; font-size: 1.4rem; text-shadow: 2px 2px 5px black; }
-.detail-author, .detail-status, .detail-genre { font-size: 0.85rem; opacity: 0.9; margin-bottom: 3px; text-shadow: 1px 1px 3px black;}
-.detail-author span, .detail-genre span { color: var(--primary); font-weight: bold; }
-.detail-actions { display: flex; gap: 10px; margin-bottom: 20px; }
-.btn-baca { flex: 1; background: var(--primary); color: white; border: none; padding: 12px; border-radius: 6px; font-family: 'Orbitron'; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; }
-.btn-admin-action { background: rgba(255,255,255,0.1); border: 1px solid var(--primary); color: white; padding: 10px; border-radius: 6px; cursor: pointer; }
-.detail-synopsis { background: var(--glass-bg); padding: 15px; border-radius: 8px; margin-bottom: 20px; border: var(--glass-border); }
-.detail-synopsis h3 { font-family: 'Orbitron'; color: var(--primary); margin-bottom: 10px; font-size: 0.9rem; }
-.chapter-item { background: var(--glass-bg); border: var(--glass-border); padding: 15px; border-radius: 6px; margin-bottom: 10px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: 0.2s; }
-
-/* MODAL & FORM */
-.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 2000; display: flex; justify-content: center; align-items: center; padding: 20px; }
-.modal-card { background: var(--glass-bg); border: var(--glass-border); padding: 30px; border-radius: 12px; width: 100%; max-width: 320px; position: relative; }
-.btn-close-red { position: absolute; top: -10px; right: -10px; background: #ff5252; color: white; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; z-index: 10; }
-.input-form { width: 100%; padding: 12px; margin-bottom: 15px; background: rgba(0,0,0,0.5); border: 1px solid var(--primary); color: white; border-radius: 6px; }
-.pass-wrapper { position: relative; }
-.btn-eye { position: absolute; right: 10px; top: 12px; color: white; cursor: pointer; z-index: 20; }
-.btn-primary { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 6px; font-family: 'Orbitron'; font-weight: bold; cursor: pointer; }
-.btn-cancel { width: 100%; padding: 12px; background: transparent; color: var(--text-main); border: 1px solid rgba(255,255,255,0.3); border-radius: 6px; cursor: pointer; font-weight: bold; }
-.error-msg { color: #ff5252; text-align: center; font-size: 12px; margin-top: 10px; min-height: 15px; font-weight: bold; }
-
-/* TOMBOL MENGAMBANG (FAB) */
-.fab { position: fixed; bottom: 20px; right: 20px; width: 56px; height: 56px; background: var(--primary); color: white; border: none; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 5px 15px rgba(0,0,0,0.5); cursor: pointer; z-index: 900; }
-.fab-left { position: fixed; bottom: 20px; left: 20px; width: 56px; height: 56px; background: #00f2fe; color: black; border: none; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 5px 15px rgba(0,242,254,0.5); cursor: pointer; z-index: 900; transition: 0.2s; }
-.fab-left:active { transform: scale(0.9); }
-
-#toastBox { visibility: hidden; position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: var(--primary); color: white; padding: 10px 20px; border-radius: 8px; z-index: 9999; font-weight: bold; }
-#toastBox.show { visibility: visible; }
-
-/* --------------------------------------
-   READER MODAL & SETTING BACA
------------------------------------------ */
-.reader-modal { position: fixed; inset: 0; background: var(--bg-color); z-index: 3000; overflow-y: auto; padding-top: 70px; transition: background 0.3s, color 0.3s; }
-.reader-header { position: fixed; top: 0; width: 100%; background: var(--glass-bg); padding: 15px; display: flex; align-items: center; gap: 15px; border-bottom: var(--glass-border); z-index: 3100; }
-.teks-cerita { padding: 20px; line-height: 1.8; white-space: pre-wrap; text-align: justify; transition: font-size 0.2s; }
-
-.setting-reader-box { position: fixed; top: 70px; right: 20px; width: 220px; padding: 15px; border-radius: 12px; z-index: 3200; text-align: center; }
-.setting-reader-box p { font-size: 12px; margin-bottom: 8px; font-weight: bold; font-family: 'Orbitron'; }
-.font-controls { display: flex; justify-content: center; align-items: center; gap: 15px; margin-bottom: 20px; }
-.font-controls button { background: var(--primary); color: white; border: none; width: 35px; height: 35px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 16px; }
-.theme-paper-controls { display: flex; justify-content: center; gap: 10px; }
-.paper { width: 40px; height: 40px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; }
-.paper.white { background: #ffffff; border-color: #ddd; }
-.paper.sepia { background: #f4ecd8; border-color: #d3b88d; }
-.paper.dark { background: #1a1a1a; border-color: #333; }
-.paper.active { border-color: var(--primary); }
-
-/* TEMA KERTAS KHUSUS READER */
-.reader-modal.theme-white { background: #ffffff !important; color: #111111 !important; }
-.reader-modal.theme-sepia { background: #f4ecd8 !important; color: #433422 !important; }
-.reader-modal.theme-dark { background: #121212 !important; color: #e0e0e0 !important; }
-
-/* Menyesuaikan warna header reader dan tombol saat ganti kertas */
-.reader-modal.theme-white .reader-header, 
-.reader-modal.theme-sepia .reader-header { background: rgba(255,255,255,0.95) !important; border-bottom: 1px solid rgba(0,0,0,0.1); }
-.reader-modal.theme-white h3, .reader-modal.theme-white .btn-back, .reader-modal.theme-white .btn-icon { color: #111111 !important; }
-.reader-modal.theme-sepia h3, .reader-modal.theme-sepia .btn-back, .reader-modal.theme-sepia .btn-icon { color: #433422 !important; }
