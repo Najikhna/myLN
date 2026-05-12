@@ -68,3 +68,47 @@ header { position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; padding: 
 .btn-close-red { position: absolute; top: -10px; right: -10px; background: #ff5252; color: white; border: none; border-radius: 50%; width: 30px; height: 30px; }
 #toastBox { visibility: hidden; position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: var(--primary); color: white; padding: 10px 20px; border-radius: 8px; z-index: 9999; }
 #toastBox.show { visibility: visible; }
+
+/* --- FIX TOMBOL KEMBALI & NAVIGASI BIAR ELEGAN --- */
+
+/* Paksa tombol kembali jadi transparan dan menyatu dengan tema */
+.btn-back-detail, .btn-back {
+    background: transparent !important;
+    border: none !important;
+    color: var(--text-main) !important;
+    box-shadow: none !important;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    outline: none !important;
+}
+
+.btn-back { 
+    padding: 5px; 
+}
+
+/* Perbagus tombol panah lanjut/kembali di bawah cerita (Biar Semi Transparan) */
+.reader-nav-bottom button {
+    background: rgba(138, 43, 226, 0.15) !important; /* Ungu transparan */
+    color: var(--primary) !important;
+    border: 1px solid rgba(138, 43, 226, 0.5) !important;
+    backdrop-filter: blur(5px);
+    width: 45px; height: 45px; 
+    border-radius: 50%; 
+    display: flex; align-items: center; justify-content: center; 
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+/* Tampilan saat tombolnya mati (Misal di Chapter 1) */
+.reader-nav-bottom button:disabled { 
+    background: transparent !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
+    color: rgba(255,255,255,0.2) !important;
+    cursor: not-allowed; 
+}
