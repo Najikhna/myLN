@@ -84,3 +84,17 @@ header { position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; padding: 
 .btn-cancel { width: 100%; padding: 12px; background: transparent; color: #aaa; border: 1px solid #555; border-radius: 8px; cursor: pointer; font-weight: bold; font-family: 'Orbitron', sans-serif; margin-top: 10px; transition: 0.2s; }
 .btn-cancel:active { background: rgba(255,255,255,0.1); }
 .error-msg { color: #ff3366; text-align: center; font-size: 12px; margin-top: 10px; min-height: 15px; font-weight: bold; }
+
+
+/* --- FITUR MUSIK & GAMBAR CHAPTER --- */
+.chapter-img-container { text-align: center; margin-bottom: 20px; }
+.chapter-img-container img { max-width: 100%; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+
+@keyframes pulse-music {
+    0% { transform: scale(1); text-shadow: 0 0 5px var(--primary); color: var(--primary); }
+    50% { transform: scale(1.2); text-shadow: 0 0 15px #00f2fe; color: #00f2fe; }
+    100% { transform: scale(1); text-shadow: 0 0 5px var(--primary); color: var(--primary); }
+}
+
+.music-playing { animation: pulse-music 1.5s infinite ease-in-out; }
+.music-paused { opacity: 0.4; transition: 0.3s; }
