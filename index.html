@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#8a2be2">
-    <link rel="stylesheet" href="style.css?v=6">
+    <link rel="stylesheet" href="style.css?v=9">
 </head>
 <body>
 
@@ -60,7 +60,13 @@
     <div class="reader-modal hidden" id="modalBaca">
         <div class="reader-header" id="readerNav">
             <button class="btn-back" onclick="tutupBaca()"><span class="material-icons">arrow_back</span></button>
-            <h3 id="bacaJudulTeks">Judul</h3>
+            
+            <button class="btn-back" onclick="toggleMusik()" style="margin-left: 5px;" title="Putar Musik">
+                <span class="material-icons music-paused" id="iconSound">volume_off</span>
+            </button>
+            
+            <h3 id="bacaJudulTeks" style="margin-left: 10px; font-size: 1rem; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; max-width: 150px;">Judul</h3>
+            
             <button class="btn-icon" onclick="toggleSettingBaca()" style="margin-left: auto;">
                 <span class="material-icons">settings</span>
             </button>
@@ -82,16 +88,18 @@
         </div>
 
         <div class="reader-content">
+            <audio id="bgmPlayer" loop preload="auto"></audio>
+
+            <div class="chapter-img-container hidden" id="boxGambarChapter">
+                <img id="imgChapter" src="" alt="Ilustrasi">
+            </div>
+
             <div id="bacaIsi" class="teks-cerita"></div>
             
             <div class="reader-nav-bottom">
-                <button id="btnPrevCh" onclick="navigasiChapter('prev')">
-                    <span class="material-icons">arrow_back</span>
-                </button>
+                <button id="btnPrevCh" onclick="navigasiChapter('prev')"><span class="material-icons">arrow_back</span></button>
                 <div id="infoChSekarang" style="font-family:'Orbitron'; font-size:12px; opacity:0.6;">CH 1</div>
-                <button id="btnNextCh" onclick="navigasiChapter('next')">
-                    <span class="material-icons">arrow_forward</span>
-                </button>
+                <button id="btnNextCh" onclick="navigasiChapter('next')"><span class="material-icons">arrow_forward</span></button>
             </div>
 
             <div id="aksiAdminChapter" class="admin-actions hidden">
@@ -121,7 +129,7 @@
             <input type="text" id="inJudulNovel" placeholder="Judul" class="input-form">
             <input type="text" id="inGenreNovel" placeholder="Genre" class="input-form">
             <label style="font-size:10px; color:var(--primary);">Upload Cover</label>
-            <input type="file" id="inFileCover" accept="image/*" class="input-form">
+            <input type="file" id="inFileCover" accept="image/*" class="input-form" style="padding:8px;">
             <input type="hidden" id="inBase64Cover">
             <textarea id="inSinopsis" placeholder="Sinopsis..." class="input-form" style="height:80px;"></textarea>
             <button class="btn-primary" onclick="simpanNovel()">SIMPAN</button>
@@ -130,18 +138,26 @@
     </div>
 
     <div class="modal-overlay hidden" id="modalFormChapter">
-        <div class="modal-card glass-panel">
+        <div class="modal-card glass-panel" style="max-height: 90vh; overflow-y: auto;">
             <h2 id="judulFormChapter" style="font-family:'Orbitron'; margin-bottom:15px;">Chapter</h2>
             <input type="hidden" id="editChapterId">
             <input type="text" id="inJudulChapter" placeholder="Judul Chapter" class="input-form">
-            <textarea id="inIsiChapter" placeholder="Isi cerita..." class="input-form" style="height:200px;"></textarea>
+            
+            <label style="font-size:10px; color:var(--primary);">Upload Gambar Chapter (Opsional)</label>
+            <input type="file" id="inFileGambarCh" accept="image/*" class="input-form" style="padding:8px;">
+            <input type="hidden" id="inBase64GambarCh">
+
+            <label style="font-size:10px; color:var(--primary);">Link URL Musik BGM (Opsional)</label>
+            <input type="text" id="inLinkMusik" placeholder="https://contoh.com/musik.mp3" class="input-form">
+            
+            <textarea id="inIsiChapter" placeholder="Isi cerita..." class="input-form" style="height:150px;"></textarea>
             <button class="btn-primary" onclick="simpanChapter()">SIMPAN</button>
             <button class="btn-cancel" onclick="tutupFormChapter()">BATAL</button>
         </div>
     </div>
 
     <div id="toastBox">Pesan</div>
-    <script src="script.js?v=6"></script>
+    <script src="script.js?v=9"></script>
     <script>
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js').then(() => console.log('Aplikasi Siap!'));
