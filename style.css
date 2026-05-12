@@ -5,16 +5,14 @@ body { font-family: 'Roboto', sans-serif; color: var(--text-main); min-height: 1
 .hidden { display: none !important; }
 .glass-panel { background: var(--glass-bg); backdrop-filter: blur(12px); border: var(--glass-border); box-shadow: 0 8px 32px rgba(0,0,0,0.5); }
 
-/* NAVBAR KEMBALI NORMAL */
+/* NAVBAR */
 header { position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; padding: 10px 15px; display: flex; align-items: center; justify-content: space-between; transition: 0.3s; }
 .logo { font-family: 'Orbitron'; font-size: 1.4rem; font-weight: 700; cursor: pointer; position: relative; z-index: 1010; }
 .logo span { color: var(--primary); }
 .header-right { display: flex; align-items: center; gap: 5px; position: relative; z-index: 1010; }
-
-/* PELINDUNG TOMBOL ANTI-MACET */
 .btn-icon { background: transparent; border: none; color: var(--text-main); cursor: pointer; width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; border-radius: 50%; z-index: 1020; position: relative; pointer-events: auto; transition: 0.2s; }
 .btn-icon:active { background: rgba(255,255,255,0.1); transform: scale(0.9); }
-.btn-icon span { pointer-events: none; } /* Kunci utama biar ikon gak nelan sentuhan jari */
+.btn-icon span { pointer-events: none; }
 
 .search-dropdown { position: fixed; top: 70px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; z-index: 990; }
 .search-dropdown input { width: 100%; padding: 12px 20px; border-radius: 25px; border: 2px solid var(--primary); background: var(--glass-bg); color: var(--text-main); backdrop-filter: blur(12px); }
@@ -37,15 +35,14 @@ header { position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; padding: 
 .detail-synopsis { background: var(--glass-bg); padding: 15px; border-radius: 8px; margin-bottom: 20px; border: var(--glass-border); font-size: 0.9rem; line-height: 1.6; }
 .chapter-item { background: var(--glass-bg); border: var(--glass-border); padding: 15px; border-radius: 6px; margin-bottom: 10px; cursor: pointer; display: flex; justify-content: space-between; }
 
-/* READER */
+/* READER & TEMA KERTAS */
 .reader-modal { position: fixed; inset: 0; background: #050508; z-index: 3000; overflow-y: auto; padding-top: 70px; }
 .reader-header { position: fixed; top: 0; width: 100%; background: var(--glass-bg); padding: 15px; display: flex; align-items: center; gap: 15px; border-bottom: var(--glass-border); z-index: 3100; }
 .teks-cerita { padding: 20px; line-height: 1.8; text-align: justify; white-space: pre-wrap; }
 
-/* NAVIGASI CHAPTER BAWAH */
 .reader-nav-bottom { display: flex; justify-content: space-between; align-items: center; padding: 20px; margin-top: 30px; border-top: var(--glass-border); }
-.reader-nav-bottom button { background: var(--primary); color: white; border: none; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-.reader-nav-bottom button:disabled { opacity: 0.2; cursor: not-allowed; }
+.reader-nav-bottom button { background: rgba(138, 43, 226, 0.15) !important; color: var(--primary) !important; border: 1px solid rgba(138, 43, 226, 0.5) !important; backdrop-filter: blur(5px); width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease; }
+.reader-nav-bottom button:disabled { background: transparent !important; border: 1px solid rgba(255,255,255,0.1) !important; color: rgba(255,255,255,0.2) !important; cursor: not-allowed; }
 
 .setting-reader-box { position: fixed; top: 70px; right: 20px; width: 220px; padding: 15px; border-radius: 12px; z-index: 3200; text-align: center; }
 .font-controls { display: flex; justify-content: center; align-items: center; gap: 15px; margin: 15px 0; }
@@ -58,57 +55,32 @@ header { position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; padding: 
 .reader-modal.theme-sepia { background: #f4ecd8 !important; color: #433422 !important; }
 .reader-modal.theme-dark { background: #050508 !important; color: #e0e0e0 !important; }
 
-/* FAB & MODAL */
-.fab, .fab-left { position: fixed; bottom: 20px; width: 56px; height: 56px; border-radius: 50%; border: none; color: white; display: flex; align-items: center; justify-content: center; z-index: 900; }
+/* FIX TOMBOL KEMBALI */
+.btn-back-detail, .btn-back { background: transparent !important; border: none !important; color: var(--text-main) !important; box-shadow: none !important; display: inline-flex; align-items: center; gap: 8px; padding: 0; font-family: 'Orbitron', sans-serif; font-weight: bold; font-size: 1rem; cursor: pointer; outline: none !important; }
+.btn-back { padding: 5px; }
+
+/* FAB & TOAST */
+.fab, .fab-left { position: fixed; bottom: 20px; width: 56px; height: 56px; border-radius: 50%; border: none; color: white; display: flex; align-items: center; justify-content: center; z-index: 900; transition: 0.2s; }
 .fab { right: 20px; background: var(--primary); }
 .fab-left { left: 20px; background: #00f2fe; color: black; }
-.input-form { width: 100%; padding: 12px; margin-bottom: 10px; background: rgba(0,0,0,0.5); border: 1px solid var(--primary); color: white; border-radius: 6px; }
-.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 2000; display: flex; justify-content: center; align-items: center; padding: 20px; }
-.modal-card { background: var(--glass-bg); padding: 25px; border-radius: 12px; width: 100%; max-width: 320px; position: relative; }
-.btn-close-red { position: absolute; top: -10px; right: -10px; background: #ff5252; color: white; border: none; border-radius: 50%; width: 30px; height: 30px; }
+.fab:active, .fab-left:active { transform: scale(0.9); }
 #toastBox { visibility: hidden; position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: var(--primary); color: white; padding: 10px 20px; border-radius: 8px; z-index: 9999; }
 #toastBox.show { visibility: visible; }
 
-/* --- FIX TOMBOL KEMBALI & NAVIGASI BIAR ELEGAN --- */
-
-/* Paksa tombol kembali jadi transparan dan menyatu dengan tema */
-.btn-back-detail, .btn-back {
-    background: transparent !important;
-    border: none !important;
-    color: var(--text-main) !important;
-    box-shadow: none !important;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 0;
-    font-family: 'Orbitron', sans-serif;
-    font-weight: bold;
-    font-size: 1rem;
-    cursor: pointer;
-    outline: none !important;
-}
-
-.btn-back { 
-    padding: 5px; 
-}
-
-/* Perbagus tombol panah lanjut/kembali di bawah cerita (Biar Semi Transparan) */
-.reader-nav-bottom button {
-    background: rgba(138, 43, 226, 0.15) !important; /* Ungu transparan */
-    color: var(--primary) !important;
-    border: 1px solid rgba(138, 43, 226, 0.5) !important;
-    backdrop-filter: blur(5px);
-    width: 45px; height: 45px; 
-    border-radius: 50%; 
-    display: flex; align-items: center; justify-content: center; 
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-/* Tampilan saat tombolnya mati (Misal di Chapter 1) */
-.reader-nav-bottom button:disabled { 
-    background: transparent !important;
-    border: 1px solid rgba(255,255,255,0.1) !important;
-    color: rgba(255,255,255,0.2) !important;
-    cursor: not-allowed; 
-}
+/* MODAL & FORM LOGIN */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); z-index: 2000; display: flex; justify-content: center; align-items: center; padding: 20px; }
+.modal-card { background: var(--glass-bg); padding: 30px; border-radius: 16px; width: 100%; max-width: 320px; position: relative; border: 1px solid rgba(138, 43, 226, 0.4); box-shadow: 0 15px 35px rgba(0,0,0,0.8); }
+.btn-close-red { position: absolute; top: -12px; right: -12px; background: #ff3366; color: white; border: none; border-radius: 50%; width: 35px; height: 35px; cursor: pointer; z-index: 10; display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 10px rgba(255, 51, 102, 0.5); transition: transform 0.2s; }
+.btn-close-red:active { transform: scale(0.9); }
+.login-title { text-align: center; margin-bottom: 25px; font-family: 'Orbitron', sans-serif; font-weight: bold; color: var(--primary); letter-spacing: 1px; }
+.input-form { width: 100%; padding: 14px 15px; margin-bottom: 15px; background: rgba(0,0,0,0.6); border: 1px solid rgba(138, 43, 226, 0.3); color: white; border-radius: 8px; font-family: 'Roboto', sans-serif; font-size: 1rem; transition: border 0.3s; outline: none; }
+.input-form:focus { border-color: var(--primary); }
+.pass-wrapper { position: relative; width: 100%; display: flex; align-items: center; margin-bottom: 5px; }
+.pass-input { margin-bottom: 0 !important; padding-right: 45px !important; width: 100%; }
+.btn-eye { position: absolute; right: 15px; color: #aaa; cursor: pointer; z-index: 20; user-select: none; }
+.btn-eye:active { color: var(--primary); }
+.btn-primary { width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 8px; font-family: 'Orbitron', sans-serif; font-weight: bold; font-size: 1rem; cursor: pointer; margin-top: 15px; letter-spacing: 1px; transition: 0.2s; }
+.btn-primary:active { filter: brightness(0.8); transform: scale(0.98); }
+.btn-cancel { width: 100%; padding: 12px; background: transparent; color: #aaa; border: 1px solid #555; border-radius: 8px; cursor: pointer; font-weight: bold; font-family: 'Orbitron', sans-serif; margin-top: 10px; transition: 0.2s; }
+.btn-cancel:active { background: rgba(255,255,255,0.1); }
+.error-msg { color: #ff3366; text-align: center; font-size: 12px; margin-top: 10px; min-height: 15px; font-weight: bold; }
