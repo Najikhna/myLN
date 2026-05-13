@@ -8,10 +8,9 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#8a2be2">
-    <link rel="stylesheet" href="style.css?v=10">
+    <link rel="stylesheet" href="style.css?v=11">
 </head>
 <body>
-
     <header id="navbar" class="glass-panel">
         <div class="logo" onclick="kembaliKeBeranda()">my<span>LN</span></div>
         <div class="header-right">
@@ -47,11 +46,14 @@
             </div>
             <div class="detail-actions">
                 <button class="btn-baca" onclick="bacaBabPertama()"><span class="material-icons">menu_book</span> MULAI BACA</button>
-                <button class="btn-admin-action hidden" id="btnHapusNovel" onclick="hapusNovel()"><span class="material-icons">delete</span></button>
+                <button class="btn-admin-action hidden" id="btnHapusNovel" onclick="hapusNovel()"><span class="material-icons">delete_outline</span></button>
             </div>
             <div class="detail-synopsis"><h3>SINOPSIS</h3><p id="detailSinopsis"></p></div>
             <div class="detail-chapters">
-                <div class="chapter-header-row"><h3>DAFTAR CHAPTER</h3><button class="btn-admin-action hidden" id="btnTambahChapter" onclick="bukaFormChapter()">+ CHAPTER</button></div>
+                <div class="chapter-header-row">
+                    <h3>DAFTAR CHAPTER</h3>
+                    <button class="btn-admin-action hidden" id="btnTambahChapter" onclick="bukaFormChapter()">+ CHAPTER</button>
+                </div>
                 <div id="listChapter" class="chapter-list-container"></div>
             </div>
         </div>
@@ -60,16 +62,11 @@
     <div class="reader-modal hidden" id="modalBaca">
         <div class="reader-header" id="readerNav">
             <button class="btn-back" onclick="tutupBaca()"><span class="material-icons">arrow_back</span></button>
-            
             <button class="btn-icon hidden" id="btnMusik" onclick="toggleMusik()" style="margin-left: 5px; width: 35px; height: 35px;">
                 <span class="material-icons music-paused" id="iconSound">volume_off</span>
             </button>
-            
             <h3 id="bacaJudulTeks" style="margin-left: 10px; font-size: 0.95rem; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; max-width: 140px;">Judul</h3>
-            
-            <button class="btn-icon" onclick="toggleSettingBaca()" style="margin-left: auto;">
-                <span class="material-icons">settings</span>
-            </button>
+            <button class="btn-icon" onclick="toggleSettingBaca()" style="margin-left: auto;"><span class="material-icons">settings</span></button>
         </div>
 
         <div id="settingBacaBox" class="setting-reader-box hidden glass-panel">
@@ -89,11 +86,9 @@
 
         <div class="reader-content">
             <audio id="bgmPlayer" loop preload="auto"></audio>
-
             <div class="chapter-img-container hidden" id="boxGambarChapter">
                 <img id="imgChapter" src="" alt="Ilustrasi">
             </div>
-
             <div id="bacaIsi" class="teks-cerita"></div>
             
             <div class="reader-nav-bottom">
@@ -104,7 +99,7 @@
 
             <div id="aksiAdminChapter" class="admin-actions hidden">
                 <button class="btn-primary" onclick="editChapterDariBaca()">EDIT CHAPTER</button>
-                <button class="btn-cancel" onclick="hapusChapterDariBaca()" style="color:#ff3366; border-color:#ff3366;">HAPUS CHAPTER</button>
+                <button class="btn-cancel" onclick="hapusChapterDariBaca()">HAPUS CHAPTER</button>
             </div>
         </div>
     </div>
@@ -147,8 +142,8 @@
             <input type="file" id="inFileGambarCh" accept="image/*" class="input-form" style="padding:10px;">
             <input type="hidden" id="inBase64GambarCh">
 
-            <label style="font-size:11px; color:var(--primary); margin-bottom:5px; display:block;">Link Lagu MP3 (Opsional)</label>
-            <input type="url" id="inLinkMusik" placeholder="Contoh: https://link-lagu.com/musik.mp3" class="input-form">
+            <label style="font-size:11px; color:var(--primary); margin-bottom:5px; display:block;">Link Lagu (Bisa YouTube/Google Drive)</label>
+            <input type="url" id="inLinkMusik" placeholder="https://drive.google.com/..." class="input-form">
             
             <textarea id="inIsiChapter" placeholder="Ketik cerita di sini..." class="input-form" style="height:180px; resize:vertical;"></textarea>
             
@@ -158,7 +153,7 @@
     </div>
 
     <div id="toastBox">Pesan</div>
-    <script src="script.js?v=10"></script>
+    <script src="script.js?v=11"></script>
     <script>
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js').then(() => console.log('Aplikasi Siap!'));
