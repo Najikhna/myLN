@@ -1,4 +1,4 @@
-const CACHE_NAME = 'myln-offline-v10'; 
+const CACHE_NAME = 'myln-offline-v11'; 
 const urlsToCache = ['/','/index.html','/style.css','/script.js','/manifest.json'];
 
 self.addEventListener('install', (event) => {
