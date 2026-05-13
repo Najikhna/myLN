@@ -1,4 +1,4 @@
-const CACHE_NAME = 'myln-offline-v11'; 
+const CACHE_NAME = 'myln-offline-v12'; 
 const urlsToCache = ['/','/index.html','/style.css','/script.js','/manifest.json'];
 
 self.addEventListener('install', (event) => {
@@ -7,9 +7,7 @@ self.addEventListener('install', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  event.respondWith(
-    fetch(event.request).catch(() => caches.match(event.request))
-  );
+  event.respondWith(fetch(event.request).catch(() => caches.match(event.request)));
 });
 
 self.addEventListener('activate', (event) => {
