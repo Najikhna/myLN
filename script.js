@@ -30,10 +30,11 @@ document.addEventListener('DOMContentLoaded', () => {
         lastScrollY = curr;
     });
 
+    // SISTEM KOMPRESI GAMBAR SUPER (Biar Memori Gak Penuh)
     const inCover = document.getElementById('inFileCover');
     if(inCover) inCover.onchange = (e) => prosesGambarKeBase64(e, 'inBase64Cover', 400);
     const inGambarCh = document.getElementById('inFileGambarCh');
-    if(inGambarCh) inGambarCh.onchange = (e) => prosesGambarKeBase64(e, 'inBase64GambarCh', 600);
+    if(inGambarCh) inGambarCh.onchange = (e) => prosesGambarKeBase64(e, 'inBase64GambarCh', 450); // Diperkecil jadi 450 biar hemat memori
 });
 
 function prosesGambarKeBase64(event, targetInputId, maxWidth) {
@@ -47,9 +48,9 @@ function prosesGambarKeBase64(event, targetInputId, maxWidth) {
             const canvas = document.createElement('canvas');
             let scale = maxWidth / img.width; if(scale > 1) scale = 1;
             canvas.width = maxWidth; canvas.height = img.height * scale;
-            canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
-            document.getElementById(targetInputId).value = canvas.toDataURL('image/jpeg', 0.8);
-            showToast("Gambar Siap!");
+            // Kualitas dikurangi jadi 0.6 biar gak bikin localStorage error (Penting banget!)
+            document.getElementById(targetInputId).value = canvas.toDataURL('image/jpeg', 0.6);
+            showToast("Gambar Siap Disimpan!");
         }
     }
 }
@@ -143,12 +144,12 @@ function toggleMusik() {
     }
 
     if(bgm.paused) {
-        bgm.play().catch(e => showToast("Gagal memutar musik. Pastikan link valid."));
+        bgm.play().catch(e => showToast("Gagal memutar! Pastikan koneksi/link valid."));
         icon.innerText = 'volume_up';
         icon.classList.remove('music-paused');
         icon.classList.add('music-playing');
     } else {
-        bgm.pause(); // Cuma jeda (pause), jadi pas play lagi lanjut dari detik terakhir
+        bgm.pause(); // Cuma jeda
         icon.innerText = 'volume_off';
         icon.classList.remove('music-playing');
         icon.classList.add('music-paused');
@@ -175,28 +176,30 @@ function bukaBaca(novId, chId) {
     document.getElementById('bacaJudulTeks').innerText = c.judul; 
     document.getElementById('bacaIsi').innerText = c.isi;
     
-    // Tampilkan Gambar Chapter jika ada
+    // TAMPILKAN GAMBAR CHAPTER DENGAN BENAR
     const boxImg = document.getElementById('boxGambarChapter');
     const imgCh = document.getElementById('imgChapter');
     if(c.gambar) {
-        imgCh.src = c.gambar; boxImg.classList.remove('hidden');
+        imgCh.src = c.gambar; 
+        boxImg.classList.remove('hidden');
     } else {
-        boxImg.classList.add('hidden'); imgCh.src = '';
+        boxImg.classList.add('hidden'); 
+        imgCh.src = '';
     }
 
-    // Load Musik (Auto-Mute/Pause)
+    // LOAD MUSIK (Auto-Mute/Pause + Converter Drive)
     const bgm = document.getElementById('bgmPlayer');
     const btnMusik = document.getElementById('btnMusik');
     const iconSound = document.getElementById('iconSound');
     
     if(c.musik) { 
         bgm.src = c.musik; 
-        btnMusik.classList.remove('hidden'); // Munculin ikon lagu
+        btnMusik.classList.remove('hidden'); // Munculin ikon
     } else { 
         bgm.src = ''; 
-        btnMusik.classList.add('hidden'); // Sembunyikan ikon lagu
+        btnMusik.classList.add('hidden'); // Sembunyikan ikon
     }
-    bgm.pause(); // SELALU MUTE/PAUSE DI AWAL MASUK
+    bgm.pause(); // SELALU MATI DI AWAL
     iconSound.innerText = 'volume_off';
     iconSound.className = 'material-icons music-paused';
 
@@ -229,8 +232,6 @@ function tutupBaca() {
     document.getElementById('modalBaca').classList.add('hidden'); 
     document.getElementById('settingBacaBox').classList.add('hidden'); 
     document.body.style.overflow = 'auto'; 
-    
-    // Matikan musik sepenuhnya saat keluar chapter
     const bgm = document.getElementById('bgmPlayer');
     bgm.pause(); bgm.currentTime = 0;
 }
@@ -250,7 +251,7 @@ function simpanNovel() {
     const c = document.getElementById('inBase64Cover').value; const s = document.getElementById('inSinopsis').value;
     if(!j) return showToast("Isi judul!");
     const id = Date.now(); dataDatabase.push({id, judul:j, genre:g, cover:c, sinopsis:s, chapters:[]});
-    saveDB(); tutupFormNovel(); renderUtama();
+    if(saveDB()) { tutupFormNovel(); renderUtama(); }
 }
 function hapusNovel() { if(confirm("Hapus novel?")) { dataDatabase = dataDatabase.filter(n => n.id !== novelAktif); saveDB(); kembaliKeBeranda(); renderUtama(); } }
 
@@ -272,14 +273,19 @@ function simpanChapter() {
     const j = document.getElementById('inJudulChapter').value; 
     const i = document.getElementById('inIsiChapter').value;
     const gb = document.getElementById('inBase64GambarCh').value;
-    const m = document.getElementById('inLinkMusik').value.trim();
+    let m = document.getElementById('inLinkMusik').value.trim();
 
     if(!j || !i) return showToast("Lengkapi Judul dan Isi Cerita!");
+
+    // AUTO-CONVERTER GOOGLE DRIVE LINK BIAR BISA DIPUTAR!
+    if(m.includes('drive.google.com/file/d/')) {
+        const match = m.match(/\/d\/([a-zA-Z0-9_-]+)/);
+        if(match) m = `https://docs.google.com/uc?export=download&id=${match[1]}`;
+    }
     
     if(idEdit) {
         const chIndex = dataDatabase[nIdx].chapters.findIndex(c => c.id == idEdit);
         if(chIndex !== -1) {
-            // Gunakan gambar lama jika admin tidak mengupload gambar baru saat Edit
             const oldImg = dataDatabase[nIdx].chapters[chIndex].gambar;
             dataDatabase[nIdx].chapters[chIndex] = { id: Number(idEdit), judul:j, isi:i, gambar: gb || oldImg, musik: m };
         }
@@ -287,18 +293,20 @@ function simpanChapter() {
         dataDatabase[nIdx].chapters.push({id: Date.now(), judul:j, isi:i, gambar: gb, musik: m});
     }
     
-    saveDB(); tutupFormChapter(); bukaDetail(novelAktif);
+    if(saveDB()) { tutupFormChapter(); bukaDetail(novelAktif); }
 }
 
-// FIX: Tombol Edit & Hapus Chapter sekarang nyambung!
 function editChapterDariBaca() {
     const n = dataDatabase.find(x => x.id === novelAktif); const c = n.chapters.find(x => x.id === chapterAktif);
     document.getElementById('judulFormChapter').innerText = "Edit Chapter";
     document.getElementById('editChapterId').value = c.id;
     document.getElementById('inJudulChapter').value = c.judul;
     document.getElementById('inIsiChapter').value = c.isi;
-    document.getElementById('inBase64GambarCh').value = c.gambar || '';
+    document.getElementById('inBase64GambarCh').value = ''; // Kosongin input file, nanti pakai oldImg kalau ngga diisi baru
+    
+    // Tampilkan link asli kalau itu GDrive yg diconvert
     document.getElementById('inLinkMusik').value = c.musik || '';
+    
     tutupBaca(); document.getElementById('modalFormChapter').classList.remove('hidden');
 }
 
@@ -306,7 +314,17 @@ function hapusChapterDariBaca() {
     if(confirm("Yakin hapus chapter ini?")) {
         const n = dataDatabase.find(x => x.id === novelAktif);
         n.chapters = n.chapters.filter(c => c.id !== chapterAktif);
-        saveDB(); tutupBaca(); bukaDetail(novelAktif);
+        if(saveDB()) { tutupBaca(); bukaDetail(novelAktif); }
     }
 }
-function saveDB() { localStorage.setItem('myln_db', JSON.stringify(dataDatabase)); }
+
+// SISTEM PROTEKSI MEMORI PENUH
+function saveDB() { 
+    try {
+        localStorage.setItem('myln_db', JSON.stringify(dataDatabase));
+        return true;
+    } catch(e) {
+        showToast("GAGAL: Memori HP Penuh! Kompres/Hapus Gambar Lain.");
+        return false;
+    }
+}
