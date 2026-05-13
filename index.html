@@ -8,9 +8,10 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#8a2be2">
-    <link rel="stylesheet" href="style.css?v=11">
+    <link rel="stylesheet" href="style.css?v=12">
 </head>
 <body>
+
     <header id="navbar" class="glass-panel">
         <div class="logo" onclick="kembaliKeBeranda()">my<span>LN</span></div>
         <div class="header-right">
@@ -104,6 +105,17 @@
         </div>
     </div>
 
+    <div class="modal-overlay hidden" id="modalConfirm" style="z-index: 9999;">
+        <div class="modal-card glass-panel" style="text-align:center; padding: 25px;">
+            <span class="material-icons" style="font-size: 40px; color: #ff3366; margin-bottom: 10px;">warning</span>
+            <h3 id="teksConfirm" style="margin-bottom:20px; font-family:'Roboto'; font-size:1rem; color:var(--text-main);">Yakin hapus?</h3>
+            <div style="display:flex; gap:10px;">
+                <button class="btn-cancel" onclick="tutupConfirm()" style="margin-top:0;">BATAL</button>
+                <button class="btn-primary" id="btnYaConfirm" style="margin-top:0; background:#ff3366;">HAPUS</button>
+            </div>
+        </div>
+    </div>
+
     <div class="modal-overlay hidden" id="modalLogin">
         <div class="modal-card glass-panel">
             <button class="btn-close-red" onclick="tutupLogin()"><span class="material-icons">close</span></button>
@@ -127,7 +139,7 @@
             <input type="file" id="inFileCover" accept="image/*" class="input-form" style="padding:10px;">
             <input type="hidden" id="inBase64Cover">
             <textarea id="inSinopsis" placeholder="Tulis sinopsis..." class="input-form" style="height:100px; resize:vertical;"></textarea>
-            <button class="btn-primary" onclick="simpanNovel()">SIMPAN NOVEL</button>
+            <button class="btn-primary" onclick="simpanNovel()">SIMPAN</button>
             <button class="btn-cancel" onclick="tutupFormNovel()">BATAL</button>
         </div>
     </div>
@@ -142,22 +154,17 @@
             <input type="file" id="inFileGambarCh" accept="image/*" class="input-form" style="padding:10px;">
             <input type="hidden" id="inBase64GambarCh">
 
-            <label style="font-size:11px; color:var(--primary); margin-bottom:5px; display:block;">Link Lagu (Bisa YouTube/Google Drive)</label>
+            <label style="font-size:11px; color:var(--primary); margin-bottom:5px; display:block;">Link Lagu (Google Drive/Lainnya)</label>
             <input type="url" id="inLinkMusik" placeholder="https://drive.google.com/..." class="input-form">
             
             <textarea id="inIsiChapter" placeholder="Ketik cerita di sini..." class="input-form" style="height:180px; resize:vertical;"></textarea>
             
-            <button class="btn-primary" onclick="simpanChapter()">SIMPAN CHAPTER</button>
+            <button class="btn-primary" onclick="simpanChapter()">SIMPAN</button>
             <button class="btn-cancel" onclick="tutupFormChapter()">BATAL</button>
         </div>
     </div>
 
     <div id="toastBox">Pesan</div>
-    <script src="script.js?v=11"></script>
-    <script>
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js').then(() => console.log('Aplikasi Siap!'));
-        }
-    </script>
+    <script src="script.js?v=12"></script>
 </body>
 </html>
